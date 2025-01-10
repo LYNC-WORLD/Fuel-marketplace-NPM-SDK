@@ -1,5 +1,4 @@
-import { Account } from 'fuels';
-import { publicRpcs } from '@/configs';
+import { AbstractAddress, Account } from 'fuels';
 import { NftMarketplace, NFTStandardInput } from '@/contracts/marketplace';
 import { Networks } from '@/enums';
 import { checkArguments } from '@/utils';
@@ -14,11 +13,10 @@ export class MarketplaceClient {
   private service: BuyTokenService | CancelListingService | ListTokenService | ModifyListingService | undefined =
     undefined;
 
-  constructor(network: Networks, wallet: Account) {
-    checkArguments([network, wallet], 'arguments');
-    if (!publicRpcs[network]) throw new Error(`Marketplace config not found for network: ${network}`);
+  constructor(network: Networks, marketplaceAddress: string | AbstractAddress, wallet: Account) {
+    checkArguments([network, marketplaceAddress, wallet], 'arguments');
 
-    this.contract = new NftMarketplace(publicRpcs[network], wallet);
+    this.contract = new NftMarketplace(marketplaceAddress, wallet);
     this.wallet = wallet;
   }
 

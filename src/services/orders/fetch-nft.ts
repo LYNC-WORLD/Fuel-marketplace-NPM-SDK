@@ -3,11 +3,14 @@ import { checkArguments } from '@/utils';
 import { SubgraphClient } from '../subgraph';
 import { SubgraphListingData } from '@/interfaces';
 
-const FETCH_LISTINGS_QUERY = `
-  query FetchListings ($status: String!, $limit: Int = 100) {
+const FETCH_NFT_QUERY = `
+  query FetchListings ($status: String!, $contractAddress: String!, $nftStandard: String!, $tokenId: String!, $limit: Int = 100) {
     Listing (
       where: {
         status: { _eq: $status }
+        { nftAddress: { _eq: $contractAddress } }
+        { nftType: { _eq: $nftStandard } }
+        { tokenId: { _eq: $tokenId } }
       }
       order_by: { db_write_timestamp: desc }
       limit: $limit
@@ -25,14 +28,24 @@ const FETCH_LISTINGS_QUERY = `
   }
 `;
 
-export const fetchListings = (network: Networks, subgraphURL: string, limit: number = 100) => {
+export const fetchNft = (
+  network: Networks,
+  subgraphURL: string,
+  contractAddress: string,
+  nftStandard: 'NFT' | 'SFT',
+  tokenId: string,
+  limit: number = 100
+) => {
   checkArguments([network, subgraphURL], 'arguments');
 
   const subgraphClient = new SubgraphClient(network, subgraphURL);
   return subgraphClient
-    .setQueryString(FETCH_LISTINGS_QUERY)
+    .setQueryString(FETCH_NFT_QUERY)
     .setVariables({
       status: 'ACTIVE',
+      contractAddress,
+      nftStandard: nftStandard === 'NFT' ? 'NFT' : 'SEMI_FT',
+      tokenId,
       limit,
     })
     .query<SubgraphListingData[]>('Listing');

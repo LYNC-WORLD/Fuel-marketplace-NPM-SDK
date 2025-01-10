@@ -1,26 +1,19 @@
 import axios from 'axios';
-import { graphQLEndpoints } from '@/configs';
 import { MarketplaceErrorCodes, Networks } from '@/enums';
-import { MarketplaceError } from '@/interfaces';
+import { MarketplaceError, SubgraphErrorResponse, SubgraphSuccessResponse } from '@/interfaces';
 import { checkArguments, sleep } from '@/utils';
 
 export class SubgraphClient {
-  private readonly graphQLEndpoint: (typeof graphQLEndpoints)[keyof typeof graphQLEndpoints] | undefined = undefined;
+  private readonly graphQLEndpoint: string | undefined = undefined;
   private queryString: string | undefined = undefined;
   private variables: Record<string, unknown> | undefined = undefined;
 
   private static lastCallTimestamp: number = 0;
 
-  constructor(network: Networks) {
-    checkArguments([network], 'arguments');
+  constructor(network: Networks, subgraphURL: string) {
+    checkArguments([network, subgraphURL], 'arguments');
 
-    if (!graphQLEndpoints[network])
-      throw new MarketplaceError(
-        `Subgraph config not found for network: ${network}`,
-        MarketplaceErrorCodes.ValidationError
-      );
-
-    this.graphQLEndpoint = graphQLEndpoints[network];
+    this.graphQLEndpoint = subgraphURL;
     this.queryString = '';
     this.variables = {};
   }
@@ -37,7 +30,7 @@ export class SubgraphClient {
     return this;
   }
 
-  async query() {
+  async query<TData>(dataKey: 'Listing' | 'Collection') {
     checkArguments([this.graphQLEndpoint, this.queryString, this.variables], 'properties');
 
     const currentTimestamp = new Date().getTime();
@@ -45,7 +38,7 @@ export class SubgraphClient {
     if (timeDifference <= 1000) await sleep(1000 - timeDifference);
 
     try {
-      const response = await axios.post(
+      const { status, data } = await axios.post<SubgraphErrorResponse | SubgraphSuccessResponse<TData>>(
         this.graphQLEndpoint as string,
         { query: this.queryString, variables: this.variables },
         { headers: { 'Content-Type': 'application/json' } }
@@ -53,17 +46,17 @@ export class SubgraphClient {
 
       SubgraphClient.lastCallTimestamp = new Date().getTime();
 
-      if (response.status !== 200 || response.data.errors)
+      if (status !== 200 || 'errors' in data)
         throw new MarketplaceError(
           'Error fetching data from subgraph',
           MarketplaceErrorCodes.NetworkError,
-          response.data.errors
+          (data as SubgraphErrorResponse).errors
         );
 
-      return response.data;
+      return { success: true, data: data.data[dataKey] as TData };
     } catch (error: unknown) {
       console.error('Error Log: Error fetching data from subgraph: ', error);
-      return error;
+      return { success: false, error };
     }
   }
 }

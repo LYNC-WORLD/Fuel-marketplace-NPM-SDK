@@ -16,3 +16,25 @@ export const checkArguments = (args: Array<unknown>, type: 'arguments' | 'proper
     throw new MarketplaceError(errorMsg, MarketplaceErrorCodes.ValidationError);
   }
 };
+
+export const getDecimalPlaces = (n: number) => {
+  const numStr = n.toString();
+
+  if (numStr.includes('e-')) {
+    const [base, exp] = numStr.split('e-');
+    const decimals = parseInt(exp, 10) + (base.includes('.') ? base.split('.')[1].length : 0);
+
+    return decimals;
+  } else if (numStr.includes('e')) {
+    const [_, exp] = numStr.split('e');
+
+    return parseInt(exp, 10) * -1;
+  } else if (numStr.includes('.')) {
+    return numStr.split('.')[1].length;
+  }
+
+  return 0;
+};
+
+export const getFormattedPrice = (price: string) =>
+  (parseFloat(price) / 10 ** 9).toFixed(getDecimalPlaces(parseFloat(price) / 10 ** 9));

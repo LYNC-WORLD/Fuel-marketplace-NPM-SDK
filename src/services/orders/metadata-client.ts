@@ -46,19 +46,18 @@ export class NftMetadataClient {
     return this;
   }
 
-  setContract(marketplaceAddress: `0x${string}`, nftStandard: NFTStandardOutput) {
-    checkArguments([marketplaceAddress, nftStandard], 'arguments');
+  setContract(contractAddress: `0x${string}`, nftStandard: NFTStandardOutput) {
+    checkArguments([contractAddress, nftStandard], 'arguments');
     checkArguments([this.provider], 'properties');
 
-    if (nftStandard === NFTStandardOutput.NFT)
-      this.contract = new NonFungibleCreator(marketplaceAddress, this.provider!);
+    if (nftStandard === NFTStandardOutput.NFT) this.contract = new NonFungibleCreator(contractAddress, this.provider!);
     else if (nftStandard === NFTStandardOutput.SEMI_FT)
-      this.contract = new SemiFungibleCreator(marketplaceAddress, this.provider!);
+      this.contract = new SemiFungibleCreator(contractAddress, this.provider!);
 
     return this;
   }
 
-  async getMetadata(assetId: `0x${string}`) {
+  async getMetadata<TData = unknown>(assetId: string) {
     checkArguments([assetId], 'arguments');
     checkArguments([this.contract], 'properties');
 
@@ -74,14 +73,14 @@ export class NftMetadataClient {
           MarketplaceErrorCodes.ServerError
         );
 
-      const { status, data } = await axios.get(metadataURL);
+      const { status, data } = await axios.get<TData>(metadataURL);
       if (status !== 200)
         throw new MarketplaceError('Network Error: Failed to fetch NFT metadata.', MarketplaceErrorCodes.NetworkError);
 
-      return data;
+      return { success: true, data };
     } catch (error: unknown) {
       console.error('Error Log: Error fetching NFT metadata: ', error);
-      return error;
+      return { success: false, error };
     }
   }
 }
