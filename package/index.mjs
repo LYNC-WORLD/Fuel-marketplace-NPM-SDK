@@ -3128,15 +3128,15 @@ var MarketplaceClient = class {
   }
   useService(service) {
     checkArguments([service], "arguments");
-    if (service instanceof BuyTokenService) {
+    if (service === "buyTokenService") {
       checkArguments([this.contract, this.wallet], "properties");
       this.service = new BuyTokenService(this.contract, this.wallet);
       return this;
     }
     checkArguments([this.contract], "properties");
-    if (service instanceof CancelListingService) this.service = new CancelListingService(this.contract);
-    if (service instanceof ListTokenService) this.service = new ListTokenService(this.contract);
-    if (service instanceof ModifyListingService) this.service = new ModifyListingService(this.contract);
+    if (service === "cancelListingService") this.service = new CancelListingService(this.contract);
+    if (service === "listTokenService") this.service = new ListTokenService(this.contract);
+    if (service === "modifyListingService") this.service = new ModifyListingService(this.contract);
     return this;
   }
   setProperties(...properties) {

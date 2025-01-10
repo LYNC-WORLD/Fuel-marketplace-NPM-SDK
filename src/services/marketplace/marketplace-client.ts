@@ -20,10 +20,10 @@ export class MarketplaceClient {
     this.wallet = wallet;
   }
 
-  useService(service: BuyTokenService | CancelListingService | ListTokenService | ModifyListingService) {
+  useService(service: 'buyTokenService' | 'cancelListingService' | 'listTokenService' | 'modifyListingService') {
     checkArguments([service], 'arguments');
 
-    if (service instanceof BuyTokenService) {
+    if (service === 'buyTokenService') {
       checkArguments([this.contract, this.wallet], 'properties');
       this.service = new BuyTokenService(this.contract!, this.wallet!);
 
@@ -32,9 +32,9 @@ export class MarketplaceClient {
 
     checkArguments([this.contract], 'properties');
 
-    if (service instanceof CancelListingService) this.service = new CancelListingService(this.contract!);
-    if (service instanceof ListTokenService) this.service = new ListTokenService(this.contract!);
-    if (service instanceof ModifyListingService) this.service = new ModifyListingService(this.contract!);
+    if (service === 'cancelListingService') this.service = new CancelListingService(this.contract!);
+    if (service === 'listTokenService') this.service = new ListTokenService(this.contract!);
+    if (service === 'modifyListingService') this.service = new ModifyListingService(this.contract!);
 
     return this;
   }
