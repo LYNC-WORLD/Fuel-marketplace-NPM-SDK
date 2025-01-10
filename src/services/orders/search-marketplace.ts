@@ -12,7 +12,6 @@ const SEARCH_MARKETPLACE_QUERY = `
         status: { _eq: "ACTIVE" }
         _or: [
           { nftAddress: { _ilike: $searchString } }
-          { nftType: { _ilike: $searchString } }
           { tokenId: { _ilike: $searchString } }
           { asset_id: { _ilike: $searchString } }
           { seller: { _ilike: $searchString } }

@@ -4,7 +4,7 @@ import { SubgraphClient } from '../subgraph';
 import { SubgraphListingData } from '@/interfaces';
 
 const FETCH_LISTINGS_QUERY = `
-  query FetchListings ($status: String!, $limit: Int = 100) {
+  query FetchListings ($status: status!, $limit: Int = 100) {
     Listing (
       where: {
         status: { _eq: $status }

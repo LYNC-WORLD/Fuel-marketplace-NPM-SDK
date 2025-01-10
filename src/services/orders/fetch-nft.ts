@@ -4,13 +4,15 @@ import { SubgraphClient } from '../subgraph';
 import { SubgraphListingData } from '@/interfaces';
 
 const FETCH_NFT_QUERY = `
-  query FetchListings ($status: String!, $contractAddress: String!, $nftStandard: String!, $tokenId: String!, $limit: Int = 100) {
+  query FetchListings ($status: status!, $contractAddress: String!, $nftStandard: nftstandard!, $tokenId: String!, $limit: Int = 100) {
     Listing (
       where: {
         status: { _eq: $status }
-        { nftAddress: { _eq: $contractAddress } }
-        { nftType: { _eq: $nftStandard } }
-        { tokenId: { _eq: $tokenId } }
+        _and: [
+          { nftAddress: { _eq: $contractAddress } }
+          { nftType: { _eq: $nftStandard } }
+          { tokenId: { _eq: $tokenId } }
+        ]
       }
       order_by: { db_write_timestamp: desc }
       limit: $limit
