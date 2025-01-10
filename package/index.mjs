@@ -1594,7 +1594,7 @@ var fetchCollections = (network, subgraphURL, limit = 100) => {
 
 // src/services/orders/fetch-listings.ts
 var FETCH_LISTINGS_QUERY = `
-  query FetchListings ($status: String!, $limit: Int = 100) {
+  query FetchListings ($status: status!, $limit: Int = 100) {
     Listing (
       where: {
         status: { _eq: $status }
@@ -1625,13 +1625,15 @@ var fetchListings = (network, subgraphURL, limit = 100) => {
 
 // src/services/orders/fetch-nft.ts
 var FETCH_NFT_QUERY = `
-  query FetchListings ($status: String!, $contractAddress: String!, $nftStandard: String!, $tokenId: String!, $limit: Int = 100) {
+  query FetchListings ($status: status!, $contractAddress: String!, $nftStandard: nftstandard!, $tokenId: String!, $limit: Int = 100) {
     Listing (
       where: {
         status: { _eq: $status }
-        { nftAddress: { _eq: $contractAddress } }
-        { nftType: { _eq: $nftStandard } }
-        { tokenId: { _eq: $tokenId } }
+        _and: [
+          { nftAddress: { _eq: $contractAddress } }
+          { nftType: { _eq: $nftStandard } }
+          { tokenId: { _eq: $tokenId } }
+        ]
       }
       order_by: { db_write_timestamp: desc }
       limit: $limit
@@ -2671,7 +2673,6 @@ var SEARCH_MARKETPLACE_QUERY = `
         status: { _eq: "ACTIVE" }
         _or: [
           { nftAddress: { _ilike: $searchString } }
-          { nftType: { _ilike: $searchString } }
           { tokenId: { _ilike: $searchString } }
           { asset_id: { _ilike: $searchString } }
           { seller: { _ilike: $searchString } }

@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/LYNC-WORLD/fuel-marketplace.git/README.md",
   "scripts": {
+    "prepublish": "yarn build",
     "build": "tsup"
   },
   "devDependencies": {
