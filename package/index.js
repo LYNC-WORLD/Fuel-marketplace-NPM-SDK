@@ -3125,7 +3125,7 @@ var ModifyListingService = class extends MarketplaceServices {
     checkArguments([contract], "arguments");
     this.contract = contract;
   }
-  setProperties(assetId, listingId, newPrice, quantityToAdd) {
+  setProperties(listingId, newPrice, quantityToAdd, assetId) {
     checkArguments([assetId, listingId, newPrice, quantityToAdd], "arguments");
     this.assetId = assetId;
     this.listingId = listingId;
@@ -3135,14 +3135,14 @@ var ModifyListingService = class extends MarketplaceServices {
   }
   execute() {
     return __async(this, null, function* () {
-      checkArguments([this.contract, this.assetId, this.listingId, this.newPrice, this.quantityToAdd], "properties");
+      checkArguments([this.contract, this.listingId, this.newPrice, this.quantityToAdd], "properties");
       try {
         const contractCall = this.contract.functions.modify_listing(
           (0, import_fuels14.bn)(this.listingId),
           (0, import_fuels14.bn)(this.newPrice * 10 ** 9),
           (0, import_fuels14.bn)(this.quantityToAdd)
         );
-        if (this.quantityToAdd > 0) {
+        if (this.quantityToAdd > 0 && this.assetId) {
           contractCall.callParams({
             forward: [(0, import_fuels14.bn)(this.quantityToAdd), this.assetId]
           });
@@ -3200,7 +3200,7 @@ var MarketplaceClient = class {
         properties[0],
         properties[1],
         properties[2],
-        properties[3]
+        properties.length > 3 ? properties[3] : void 0
       );
     return this;
   }

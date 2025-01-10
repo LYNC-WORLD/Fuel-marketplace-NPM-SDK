@@ -57,9 +57,9 @@ export class MarketplaceClient {
     if (this.service instanceof ModifyListingService)
       this.service.setProperties(
         properties[0] as `0x${string}`,
-        properties[1] as `0x${string}`,
+        properties[1] as number,
         properties[2] as number,
-        properties[3] as number
+        properties.length > 3 ? (properties[3] as `0x${string}`) : undefined
       );
 
     return this;

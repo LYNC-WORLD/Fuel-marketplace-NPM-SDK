@@ -16,7 +16,7 @@ export class ModifyListingService extends MarketplaceServices {
     this.contract = contract;
   }
 
-  setProperties(assetId: `0x${string}`, listingId: `0x${string}`, newPrice: number, quantityToAdd: number) {
+  setProperties(listingId: `0x${string}`, newPrice: number, quantityToAdd: number, assetId?: `0x${string}`) {
     checkArguments([assetId, listingId, newPrice, quantityToAdd], 'arguments');
 
     this.assetId = assetId;
@@ -28,7 +28,7 @@ export class ModifyListingService extends MarketplaceServices {
   }
 
   async execute() {
-    checkArguments([this.contract, this.assetId, this.listingId, this.newPrice, this.quantityToAdd], 'properties');
+    checkArguments([this.contract, this.listingId, this.newPrice, this.quantityToAdd], 'properties');
 
     try {
       const contractCall = this.contract!.functions.modify_listing(
@@ -37,9 +37,9 @@ export class ModifyListingService extends MarketplaceServices {
         bn(this.quantityToAdd)
       );
 
-      if (this.quantityToAdd! > 0) {
+      if (this.quantityToAdd! > 0 && this.assetId) {
         contractCall.callParams({
-          forward: [bn(this.quantityToAdd), this.assetId!],
+          forward: [bn(this.quantityToAdd), this.assetId],
         });
       }
 
