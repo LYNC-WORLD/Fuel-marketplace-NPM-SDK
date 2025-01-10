@@ -17,7 +17,7 @@ export class ModifyListingService extends MarketplaceServices {
   }
 
   setProperties(listingId: `0x${string}`, newPrice: number, quantityToAdd: number, assetId?: `0x${string}`) {
-    checkArguments([assetId, listingId, newPrice, quantityToAdd], 'arguments');
+    checkArguments([listingId, newPrice, quantityToAdd], 'arguments');
 
     this.assetId = assetId;
     this.listingId = listingId;

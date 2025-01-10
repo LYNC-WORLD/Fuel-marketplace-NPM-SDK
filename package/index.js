@@ -3126,7 +3126,7 @@ var ModifyListingService = class extends MarketplaceServices {
     this.contract = contract;
   }
   setProperties(listingId, newPrice, quantityToAdd, assetId) {
-    checkArguments([assetId, listingId, newPrice, quantityToAdd], "arguments");
+    checkArguments([listingId, newPrice, quantityToAdd], "arguments");
     this.assetId = assetId;
     this.listingId = listingId;
     this.newPrice = newPrice;
