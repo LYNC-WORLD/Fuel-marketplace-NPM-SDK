@@ -145,7 +145,7 @@ export const checkNftOwnership = async (
     }
 
     const quantityValidation =
-      nftStandard === 'NFT' ? Number(balance.toString()) !== 1 : Number(balance.toString()) > 1;
+      nftStandard === 'NFT' ? Number(balance.toString()) === 1 : Number(balance.toString()) >= 1;
 
     if (!quantityValidation) {
       errors.push(`Validation error: Not a valid ${nftStandard} type`);

@@ -1501,7 +1501,7 @@ var checkNftOwnership = (wallet, contractAddress, subId, nftStandard) => __async
       errors.push(`Validation error: Invalid ${nftStandard} contract address`);
       return { success: false, errors };
     }
-    const quantityValidation = nftStandard === "NFT" ? Number(balance.toString()) !== 1 : Number(balance.toString()) > 1;
+    const quantityValidation = nftStandard === "NFT" ? Number(balance.toString()) === 1 : Number(balance.toString()) >= 1;
     if (!quantityValidation) {
       errors.push(`Validation error: Not a valid ${nftStandard} type`);
       return { success: false, errors };
