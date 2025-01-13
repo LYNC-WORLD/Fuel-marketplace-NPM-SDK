@@ -79,7 +79,7 @@ export const useCollections = ({
     }
 
     setFetching(false);
-  }, []);
+  }, [network, subgraphURL, limit]);
 
   useEffect(() => {
     fetchData();

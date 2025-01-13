@@ -18,7 +18,8 @@ export const useNft = ({
   const [error, setError] = useState<unknown>(null);
 
   const fetchData = useCallback(async () => {
-    setFetching(true);
+    if (!contractAddress || !nftStandard || !tokenId) return;
+
     const response = await fetchNft(network, subgraphURL, contractAddress, nftStandard, tokenId, limit ?? 100);
 
     if (!response.success) {
@@ -85,7 +86,7 @@ export const useNft = ({
     setError(null);
 
     setFetching(false);
-  }, []);
+  }, [network, subgraphURL, contractAddress, nftStandard, tokenId, limit]);
 
   useEffect(() => {
     fetchData();

@@ -35,7 +35,7 @@ export class SubgraphClient {
 
     const currentTimestamp = new Date().getTime();
     const timeDifference = currentTimestamp - SubgraphClient.lastCallTimestamp;
-    if (timeDifference <= 1000) await sleep(2000 - timeDifference);
+    if (timeDifference <= 1000) await sleep(1000 - timeDifference);
 
     try {
       const { status, data } = await axios.post<SubgraphErrorResponse | SubgraphSuccessResponse<TData>>(

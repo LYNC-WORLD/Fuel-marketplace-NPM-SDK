@@ -80,7 +80,7 @@ export const useListings = ({
     setError(null);
 
     setFetching(false);
-  }, []);
+  }, [network, subgraphURL, limit]);
 
   useEffect(() => {
     fetchData();

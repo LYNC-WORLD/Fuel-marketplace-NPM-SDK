@@ -13,10 +13,13 @@ export const useAllNftsInCollection = ({
   const [error, setError] = useState<unknown>(null);
 
   const fetchData = useCallback(async () => {
+    if (!contractAddress || !nftStandard) return;
+
     const isAddress = Address.fromB256(contractAddress);
     if (!isAddress) {
       setData([]);
       setError([{ message: 'Invalid contract address' }]);
+      setFetching(false);
       return;
     }
 
@@ -43,7 +46,7 @@ export const useAllNftsInCollection = ({
     setData(allNftsOfContract);
     setError(null);
     setFetching(false);
-  }, []);
+  }, [network, nftStandard, contractAddress]);
 
   useEffect(() => {
     fetchData();

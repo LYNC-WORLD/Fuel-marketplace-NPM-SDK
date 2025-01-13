@@ -1524,10 +1524,12 @@ var useAllNftsInCollection = ({
   const [error, setError] = (0, import_react.useState)(null);
   const fetchData = (0, import_react.useCallback)(() => __async(void 0, null, function* () {
     var _a;
+    if (!contractAddress || !nftStandard) return;
     const isAddress = import_fuels6.Address.fromB256(contractAddress);
     if (!isAddress) {
       setData([]);
       setError([{ message: "Invalid contract address" }]);
+      setFetching(false);
       return;
     }
     setFetching(true);
@@ -1548,7 +1550,7 @@ var useAllNftsInCollection = ({
     setData(allNftsOfContract);
     setError(null);
     setFetching(false);
-  }), []);
+  }), [network, nftStandard, contractAddress]);
   (0, import_react.useEffect)(() => {
     fetchData();
   }, [fetchData]);
@@ -1585,7 +1587,7 @@ var _SubgraphClient = class _SubgraphClient {
       checkArguments([this.graphQLEndpoint, this.queryString, this.variables], "properties");
       const currentTimestamp = (/* @__PURE__ */ new Date()).getTime();
       const timeDifference = currentTimestamp - _SubgraphClient.lastCallTimestamp;
-      if (timeDifference <= 1e3) yield sleep(2e3 - timeDifference);
+      if (timeDifference <= 1e3) yield sleep(1e3 - timeDifference);
       try {
         const { status, data } = yield import_axios3.default.post(
           this.graphQLEndpoint,
@@ -2838,7 +2840,7 @@ var useCollections = ({
       setData([]);
     }
     setFetching(false);
-  }), []);
+  }), [network, subgraphURL, limit]);
   (0, import_react2.useEffect)(() => {
     fetchData();
   }, [fetchData]);
@@ -2903,7 +2905,7 @@ var useListings = ({
     setData(listingsWithMetadata);
     setError(null);
     setFetching(false);
-  }), []);
+  }), [network, subgraphURL, limit]);
   (0, import_react3.useEffect)(() => {
     fetchData();
   }, [fetchData]);
@@ -2924,7 +2926,7 @@ var useNft = ({
   const [data, setData] = (0, import_react4.useState)([]);
   const [error, setError] = (0, import_react4.useState)(null);
   const fetchData = (0, import_react4.useCallback)(() => __async(void 0, null, function* () {
-    setFetching(true);
+    if (!contractAddress || !nftStandard || !tokenId) return;
     const response = yield fetchNft(network, subgraphURL, contractAddress, nftStandard, tokenId, limit != null ? limit : 100);
     if (!response.success) {
       setError(response.error);
@@ -2973,7 +2975,7 @@ var useNft = ({
     setData(listingsWithMetadata);
     setError(null);
     setFetching(false);
-  }), []);
+  }), [network, subgraphURL, contractAddress, nftStandard, tokenId, limit]);
   (0, import_react4.useEffect)(() => {
     fetchData();
   }, [fetchData]);
