@@ -13,7 +13,7 @@ export const useNft = ({
   nftStandard,
   tokenId,
 }: NftDetailsArgs): Readonly<HooksReturn<NftDetails[]>> => {
-  const [fetching, setFetching] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(true);
   const [data, setData] = useState<NftDetails[]>([]);
   const [error, setError] = useState<unknown>(null);
 

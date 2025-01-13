@@ -10,7 +10,7 @@ export const useListings = ({
   subgraphURL,
   limit,
 }: HooksArgs): Readonly<HooksReturn<MarketplaceListings[]>> => {
-  const [fetching, setFetching] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(true);
   const [data, setData] = useState<MarketplaceListings[]>([]);
   const [error, setError] = useState<unknown>(null);
 

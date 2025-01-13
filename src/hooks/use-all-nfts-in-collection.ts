@@ -8,7 +8,7 @@ export const useAllNftsInCollection = ({
   nftStandard,
   contractAddress,
 }: AllNftsInCollectionArgs): Readonly<HooksReturn<TokenDetails[]>> => {
-  const [fetching, setFetching] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(true);
   const [data, setData] = useState<TokenDetails[]>([]);
   const [error, setError] = useState<unknown>(null);
 

@@ -11,7 +11,7 @@ export const useCollections = ({
   subgraphURL,
   limit,
 }: HooksArgs): Readonly<HooksReturn<MarketplaceCollections[]>> => {
-  const [fetching, setFetching] = useState<boolean>(false);
+  const [fetching, setFetching] = useState<boolean>(true);
   const [data, setData] = useState<MarketplaceCollections[]>([]);
   const [error, setError] = useState<unknown>(null);
 

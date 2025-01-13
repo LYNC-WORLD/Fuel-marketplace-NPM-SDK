@@ -1519,7 +1519,7 @@ var useAllNftsInCollection = ({
   nftStandard,
   contractAddress
 }) => {
-  const [fetching, setFetching] = (0, import_react.useState)(false);
+  const [fetching, setFetching] = (0, import_react.useState)(true);
   const [data, setData] = (0, import_react.useState)([]);
   const [error, setError] = (0, import_react.useState)(null);
   const fetchData = (0, import_react.useCallback)(() => __async(void 0, null, function* () {
@@ -1585,7 +1585,7 @@ var _SubgraphClient = class _SubgraphClient {
       checkArguments([this.graphQLEndpoint, this.queryString, this.variables], "properties");
       const currentTimestamp = (/* @__PURE__ */ new Date()).getTime();
       const timeDifference = currentTimestamp - _SubgraphClient.lastCallTimestamp;
-      if (timeDifference <= 1e3) yield sleep(1e3 - timeDifference);
+      if (timeDifference <= 1e3) yield sleep(2e3 - timeDifference);
       try {
         const { status, data } = yield import_axios3.default.post(
           this.graphQLEndpoint,
@@ -2789,7 +2789,7 @@ var useCollections = ({
   subgraphURL,
   limit
 }) => {
-  const [fetching, setFetching] = (0, import_react2.useState)(false);
+  const [fetching, setFetching] = (0, import_react2.useState)(true);
   const [data, setData] = (0, import_react2.useState)([]);
   const [error, setError] = (0, import_react2.useState)(null);
   const fetchData = (0, import_react2.useCallback)(() => __async(void 0, null, function* () {
@@ -2852,7 +2852,7 @@ var useListings = ({
   subgraphURL,
   limit
 }) => {
-  const [fetching, setFetching] = (0, import_react3.useState)(false);
+  const [fetching, setFetching] = (0, import_react3.useState)(true);
   const [data, setData] = (0, import_react3.useState)([]);
   const [error, setError] = (0, import_react3.useState)(null);
   const fetchData = (0, import_react3.useCallback)(() => __async(void 0, null, function* () {
@@ -2920,7 +2920,7 @@ var useNft = ({
   nftStandard,
   tokenId
 }) => {
-  const [fetching, setFetching] = (0, import_react4.useState)(false);
+  const [fetching, setFetching] = (0, import_react4.useState)(true);
   const [data, setData] = (0, import_react4.useState)([]);
   const [error, setError] = (0, import_react4.useState)(null);
   const fetchData = (0, import_react4.useCallback)(() => __async(void 0, null, function* () {

@@ -1477,7 +1477,7 @@ var useAllNftsInCollection = ({
   nftStandard,
   contractAddress
 }) => {
-  const [fetching, setFetching] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const fetchData = useCallback(() => __async(void 0, null, function* () {
@@ -1543,7 +1543,7 @@ var _SubgraphClient = class _SubgraphClient {
       checkArguments([this.graphQLEndpoint, this.queryString, this.variables], "properties");
       const currentTimestamp = (/* @__PURE__ */ new Date()).getTime();
       const timeDifference = currentTimestamp - _SubgraphClient.lastCallTimestamp;
-      if (timeDifference <= 1e3) yield sleep(1e3 - timeDifference);
+      if (timeDifference <= 1e3) yield sleep(2e3 - timeDifference);
       try {
         const { status, data } = yield axios2.post(
           this.graphQLEndpoint,
@@ -2747,7 +2747,7 @@ var useCollections = ({
   subgraphURL,
   limit
 }) => {
-  const [fetching, setFetching] = useState2(false);
+  const [fetching, setFetching] = useState2(true);
   const [data, setData] = useState2([]);
   const [error, setError] = useState2(null);
   const fetchData = useCallback2(() => __async(void 0, null, function* () {
@@ -2810,7 +2810,7 @@ var useListings = ({
   subgraphURL,
   limit
 }) => {
-  const [fetching, setFetching] = useState3(false);
+  const [fetching, setFetching] = useState3(true);
   const [data, setData] = useState3([]);
   const [error, setError] = useState3(null);
   const fetchData = useCallback3(() => __async(void 0, null, function* () {
@@ -2878,7 +2878,7 @@ var useNft = ({
   nftStandard,
   tokenId
 }) => {
-  const [fetching, setFetching] = useState4(false);
+  const [fetching, setFetching] = useState4(true);
   const [data, setData] = useState4([]);
   const [error, setError] = useState4(null);
   const fetchData = useCallback4(() => __async(void 0, null, function* () {
