@@ -6,9 +6,9 @@ import { checkArguments } from '@/utils';
 export class ModifyListingService extends MarketplaceServices {
   private readonly contract: NftMarketplace | undefined = undefined;
   private assetId: `0x${string}` | undefined = undefined;
-  private listingId: `0x${string}` | undefined = undefined;
-  private newPrice: number | undefined = undefined;
-  private quantityToAdd: number | undefined = undefined;
+  private listingId: `0x${string}` = '0x';
+  private newPrice: number = 0;
+  private quantityToAdd: number = 0;
 
   constructor(contract: NftMarketplace) {
     super();
@@ -33,11 +33,11 @@ export class ModifyListingService extends MarketplaceServices {
     try {
       const contractCall = this.contract!.functions.modify_listing(
         bn(this.listingId),
-        bn(this.newPrice! * 10 ** 9),
+        bn(this.newPrice * 10 ** 9),
         bn(this.quantityToAdd)
       );
 
-      if (this.quantityToAdd! > 0 && this.assetId) {
+      if (this.quantityToAdd > 0 && this.assetId) {
         contractCall.callParams({
           forward: [bn(this.quantityToAdd), this.assetId],
         });
@@ -46,10 +46,10 @@ export class ModifyListingService extends MarketplaceServices {
       const transactionAwaited = await contractCall.call();
       const finalTransaction = await transactionAwaited.waitForResult();
 
-      return finalTransaction;
+      return { success: true, data: finalTransaction };
     } catch (error: unknown) {
       console.error('Error Log: Error executing buy token transaction: ', { error });
-      return error;
+      return { success: false, error };
     }
   }
 }

@@ -1,72 +1,49 @@
-import { AbstractAddress, Account } from 'fuels';
-import { NftMarketplace, NFTStandardInput } from '@/contracts/marketplace';
-import { Networks } from '@/enums';
+import { Account } from 'fuels';
+import { NftMarketplace } from '@/contracts/marketplace';
+import { MarketplaceErrorCodes, Networks } from '@/enums';
 import { checkArguments } from '@/utils';
 import { BuyTokenService } from './buy-token';
 import { CancelListingService } from './cancel-listing';
 import { ListTokenService } from './list-token';
 import { ModifyListingService } from './modify-listing';
+import { marketplaceAddresses } from '@/configs';
+import { MarketplaceError } from '@/interfaces';
 
 export class MarketplaceClient {
   private readonly contract: NftMarketplace | undefined = undefined;
   private readonly wallet: Account | undefined = undefined;
-  private service: BuyTokenService | CancelListingService | ListTokenService | ModifyListingService | undefined =
-    undefined;
 
-  constructor(network: Networks, marketplaceAddress: string | AbstractAddress, wallet: Account) {
-    checkArguments([network, marketplaceAddress, wallet], 'arguments');
+  constructor(network: Networks, wallet: Account) {
+    checkArguments([network, wallet], 'arguments');
 
-    this.contract = new NftMarketplace(marketplaceAddress, wallet);
+    if (!marketplaceAddresses[network])
+      throw new MarketplaceError(
+        'Invalid Network Argument: Marketplace address not found for network',
+        MarketplaceErrorCodes.InvalidNetworkArgument,
+        { network }
+      );
+
+    this.contract = new NftMarketplace(marketplaceAddresses[network], wallet);
     this.wallet = wallet;
   }
 
-  useService(service: 'buyTokenService' | 'cancelListingService' | 'listTokenService' | 'modifyListingService') {
-    checkArguments([service], 'arguments');
+  useBuyTokenService() {
+    checkArguments([this.contract, this.wallet], 'properties');
+    return new BuyTokenService(this.contract!, this.wallet!);
+  }
 
-    if (service === 'buyTokenService') {
-      checkArguments([this.contract, this.wallet], 'properties');
-      this.service = new BuyTokenService(this.contract!, this.wallet!);
-
-      return this;
-    }
-
+  useCancelListingService() {
     checkArguments([this.contract], 'properties');
-
-    if (service === 'cancelListingService') this.service = new CancelListingService(this.contract!);
-    if (service === 'listTokenService') this.service = new ListTokenService(this.contract!);
-    if (service === 'modifyListingService') this.service = new ModifyListingService(this.contract!);
-
-    return this;
+    return new CancelListingService(this.contract!);
   }
 
-  setProperties(...properties: Array<unknown>) {
-    checkArguments(properties, 'arguments');
-
-    if (this.service instanceof BuyTokenService)
-      this.service.setProperties(properties[0] as `0x${string}`, properties[1] as number, properties[2] as number);
-    if (this.service instanceof CancelListingService) this.service.setProperties(properties[0] as `0x${string}`);
-    if (this.service instanceof ListTokenService)
-      this.service.setProperties(
-        properties[0] as `0x${string}`,
-        properties[1] as `0x${string}`,
-        properties[2] as `0x${string}`,
-        properties[3] as number,
-        properties[4] as number,
-        properties[5] as NFTStandardInput
-      );
-    if (this.service instanceof ModifyListingService)
-      this.service.setProperties(
-        properties[0] as `0x${string}`,
-        properties[1] as number,
-        properties[2] as number,
-        properties.length > 3 ? (properties[3] as `0x${string}`) : undefined
-      );
-
-    return this;
+  useListTokenService() {
+    checkArguments([this.contract], 'properties');
+    return new ListTokenService(this.contract!);
   }
 
-  executeTransaction() {
-    checkArguments([this.service], 'properties');
-    return this.service!.execute();
+  useModifyListingService() {
+    checkArguments([this.contract], 'properties');
+    return new ModifyListingService(this.contract!);
   }
 }

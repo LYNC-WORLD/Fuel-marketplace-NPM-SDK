@@ -5,18 +5,14 @@ import { AllowedProviders } from '@/enums';
 import { getFormattedPrice } from '@/utils';
 import { NFTStandardOutput } from '@/contracts/marketplace';
 
-export const useListings = ({
-  network,
-  subgraphURL,
-  limit,
-}: HooksArgs): Readonly<HooksReturn<MarketplaceListings[]>> => {
+export const useListings = ({ network, limit }: HooksArgs): Readonly<HooksReturn<MarketplaceListings[]>> => {
   const [fetching, setFetching] = useState<boolean>(true);
   const [data, setData] = useState<MarketplaceListings[]>([]);
   const [error, setError] = useState<unknown>(null);
 
   const fetchData = useCallback(async () => {
     setFetching(true);
-    const response = await fetchListings(network, subgraphURL, limit ?? 100);
+    const response = await fetchListings(network, limit ?? 100);
 
     if (!response.success) {
       setError(response.error);
@@ -33,24 +29,24 @@ export const useListings = ({
     const formattedData = listingData!.map(
       (d) =>
         ({
-          itemId: Number(d.id),
+          listingId: Number(d.id),
           isActive: d.status === 'ACTIVE',
           nftAddress: d.nftAddress,
-          itemStandard: d.nftType === 'NFT' ? 'NFT' : 'SFT',
+          tokenStandard: d.nftType,
           tokenId: d.tokenId,
           assetId: d.asset_id,
-          itemQuantity: parseInt(d.quantity),
+          tokenQuantity: parseInt(d.quantity),
           pricePerItem: getFormattedPrice(d.pricePerItem),
           sellerAddress: d.seller,
-          itemName: '',
-          itemImage: '',
-          itemMedia: '',
+          tokenName: '',
+          tokenImage: '',
+          tokenAssetMedia: '',
         }) as MarketplaceListings
     );
 
     const fetchMetadata = (d: MarketplaceListings) => {
       return metaDataClientWithProvider
-        .setContract(d.nftAddress, d.itemStandard === 'NFT' ? NFTStandardOutput.NFT : NFTStandardOutput.SEMI_FT)
+        .setContract(d.nftAddress, d.tokenStandard as NFTStandardOutput)
         .getMetadata<ListingMetadata>(d.assetId);
     };
 
@@ -67,9 +63,9 @@ export const useListings = ({
         const metadata = p.value;
 
         if (metadata.success) {
-          listing.itemName = metadata.data?.name ?? '';
-          listing.itemImage = metadata.data?.image ?? '';
-          listing.itemMedia = metadata.data?.assetMedia ?? '';
+          listing.tokenName = metadata.data?.name ?? '';
+          listing.tokenImage = metadata.data?.image ?? '';
+          listing.tokenAssetMedia = metadata.data?.assetMedia ?? '';
         }
       }
 
@@ -80,7 +76,7 @@ export const useListings = ({
     setError(null);
 
     setFetching(false);
-  }, [network, subgraphURL, limit]);
+  }, [network, limit]);
 
   useEffect(() => {
     fetchData();

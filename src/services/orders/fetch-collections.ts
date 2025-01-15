@@ -19,10 +19,10 @@ const FETCH_COLLECTION_QUERY = `
   }
 `;
 
-export const fetchCollections = (network: Networks, subgraphURL: string, limit: number = 100) => {
-  checkArguments([network, subgraphURL], 'arguments');
+export const fetchCollections = (network: Networks, limit: number = 100) => {
+  checkArguments([network], 'arguments');
 
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+  const subgraphClient = new SubgraphClient(network);
   return subgraphClient
     .setQueryString(FETCH_COLLECTION_QUERY)
     .setVariables({

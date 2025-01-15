@@ -5,11 +5,11 @@ import { checkArguments } from '@/utils';
 
 export class ListTokenService extends MarketplaceServices {
   private readonly contract: NftMarketplace | undefined = undefined;
-  private assetId: `0x${string}` | undefined = undefined;
-  private contractId: `0x${string}` | undefined = undefined;
-  private subId: `0x${string}` | undefined = undefined;
-  private price: number | undefined = undefined;
-  private amount: number | undefined = undefined;
+  private assetId: `0x${string}` = '0x';
+  private contractAddress: `0x${string}` = '0x';
+  private subId: `0x${string}` = '0x';
+  private price: number = 0;
+  private amount: number = 0;
   private tokenStandard: NFTStandardInput | undefined = undefined;
 
   constructor(contract: NftMarketplace) {
@@ -20,16 +20,16 @@ export class ListTokenService extends MarketplaceServices {
 
   setProperties(
     assetId: `0x${string}`,
-    contractId: `0x${string}`,
+    contractAddress: `0x${string}`,
     subId: `0x${string}`,
     price: number,
     amount: number,
     tokenStandard: NFTStandardInput
   ) {
-    checkArguments([assetId, contractId, subId, price, amount, tokenStandard], 'arguments');
+    checkArguments([assetId, contractAddress, subId, price, amount, tokenStandard], 'arguments');
 
     this.assetId = assetId;
-    this.contractId = contractId;
+    this.contractAddress = contractAddress;
     this.subId = subId;
     this.price = price;
     this.amount = amount;
@@ -40,34 +40,34 @@ export class ListTokenService extends MarketplaceServices {
 
   async execute() {
     checkArguments(
-      [this.contract, this.assetId, this.contractId, this.subId, this.price, this.amount, this.tokenStandard],
+      [this.contract, this.assetId, this.contractAddress, this.subId, this.price, this.amount, this.tokenStandard],
       'properties'
     );
 
     try {
       const contractIdInput = {
-        bits: this.contractId!,
+        bits: this.contractAddress,
       };
 
       const transactionAwaited = await this.contract!.functions.list_nft(
         contractIdInput,
-        bn(this.price! * 10 ** 9),
-        this.subId!,
+        bn(this.price * 10 ** 9),
+        this.subId,
         bn(this.amount),
         this.tokenStandard!
       )
         .callParams({
-          forward: [bn(this.amount), this.assetId!],
+          forward: [bn(this.amount), this.assetId],
         })
         .call();
 
       const finalTransaction = await transactionAwaited.waitForResult();
-
       if (!finalTransaction.transactionId) return null;
-      return finalTransaction;
+
+      return { success: true, data: finalTransaction };
     } catch (error: unknown) {
       console.error('Error Log: Error executing list token transaction: ', { error });
-      return error;
+      return { success: false, error };
     }
   }
 }

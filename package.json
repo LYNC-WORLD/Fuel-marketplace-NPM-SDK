@@ -1,7 +1,7 @@
 {
   "name": "@lyncworld/fuel-marketplace",
   "private": false,
-  "version": "0.0.0-beta.1",
+  "version": "0.0.0-beta.2",
   "author": {
     "name": "LYNC WORLD",
     "url": "https://www.lync.world"
@@ -11,7 +11,11 @@
     "fuel",
     "marketplace",
     "nft",
-    "sft"
+    "sft",
+    "testnet",
+    "listing",
+    "buying",
+    "blockchain"
   ],
   "module": "./package/index.js",
   "main": "./package/index.js",
@@ -19,11 +23,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LYNC-WORLD/fuel-marketplace.git"
+    "url": "https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK.git"
   },
-  "homepage": "https://github.com/LYNC-WORLD/fuel-marketplace.git/README.md",
+  "homepage": "https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK.git/README.md",
   "scripts": {
-    "prepublish": "yarn build",
     "build": "tsup"
   },
   "devDependencies": {

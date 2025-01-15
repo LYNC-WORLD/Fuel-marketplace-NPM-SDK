@@ -91,15 +91,17 @@ var AllowedProviders = /* @__PURE__ */ ((AllowedProviders2) => {
   AllowedProviders2["WalletProvider"] = "WalletProvider";
   return AllowedProviders2;
 })(AllowedProviders || {});
-var Networks = /* @__PURE__ */ ((Networks6) => {
-  Networks6["Testnet"] = "testnet";
-  return Networks6;
+var Networks = /* @__PURE__ */ ((Networks7) => {
+  Networks7["Testnet"] = "testnet";
+  return Networks7;
 })(Networks || {});
 var MarketplaceErrorCodes = /* @__PURE__ */ ((MarketplaceErrorCodes2) => {
   MarketplaceErrorCodes2["InsufficientBalance"] = "InsufficientBalance";
-  MarketplaceErrorCodes2["NetworkError"] = "NetworkError";
+  MarketplaceErrorCodes2["InvalidArgumentsError"] = "InvalidArgumentsError";
+  MarketplaceErrorCodes2["InvalidNetworkArgument"] = "InvalidNetworkArgument";
+  MarketplaceErrorCodes2["NetworkRequestError"] = "NetworkRequestError";
+  MarketplaceErrorCodes2["PropertyUndefinedError"] = "PropertyUndefinedError";
   MarketplaceErrorCodes2["ServerError"] = "ServerError";
-  MarketplaceErrorCodes2["ValidationError"] = "ValidationError";
   return MarketplaceErrorCodes2;
 })(MarketplaceErrorCodes || {});
 
@@ -120,6 +122,12 @@ var MarketplaceServices = class {
 // src/configs/blockchain.ts
 var publicRpcs = {
   testnet: "https://testnet.fuel.network/v1/graphql"
+};
+var marketplaceAddresses = {
+  testnet: "0xb05032967c123dc561f7cef1ed9c079a4833d658ce9d74885e3ec3ec94cdcde7"
+};
+var subgraphURLs = {
+  testnet: "https://indexer.dev.hyperindex.xyz/57541e1/v1/graphql"
 };
 
 // src/contracts/non-fungible/typegen/non-fungible-creator.ts
@@ -1358,8 +1366,12 @@ var checkArguments = (args, type) => {
   const validArgs = args.every((arg) => arg !== void 0 && arg !== null);
   if (!validArgs) {
     const argsString = args.map((arg) => String(arg)).join(", ");
-    const errorMsg = type === "arguments" ? `Invalid argument${args.length > 1 ? "s" : ""} - ${argsString} ${args.length > 1 ? "are" : "is"} required.` : `${args.length > 1 ? "Properties" : "Property"} not found - ${argsString} ${args.length > 1 ? "are" : "is"} required.`;
-    throw new MarketplaceError(errorMsg, "ValidationError" /* ValidationError */);
+    const errorMsg = type === "arguments" ? `Invalid argument${args.length > 1 ? "s" : ""} Error: ${argsString} ${args.length > 1 ? "are" : "is"} required.` : `${args.length > 1 ? "Properties" : "Property"} Undefined Error: ${argsString} ${args.length > 1 ? "are" : "is"} not defined.`;
+    throw new MarketplaceError(
+      `${type === "arguments" ? "Invalid Arguments Error" : "Properties Undefined Error"}: ${errorMsg}`,
+      type === "arguments" ? "InvalidArgumentsError" /* InvalidArgumentsError */ : "PropertyUndefinedError" /* PropertyUndefinedError */,
+      type === "arguments" ? { arguments: args } : { properties: args }
+    );
   }
 };
 var getDecimalPlaces = (n) => {
@@ -1416,8 +1428,8 @@ var getContractBalances = (network, contractAddress) => __async(void 0, null, fu
     );
     if (status !== 200 || "errors" in data)
       throw new MarketplaceError(
-        "Error fetching data from fuel network",
-        "NetworkError" /* NetworkError */,
+        "Network Request Error: Error fetching data from fuel network",
+        "NetworkRequestError" /* NetworkRequestError */,
         data.errors
       );
     return { success: true, data: data.data.contractBalances.nodes };
@@ -1444,9 +1456,9 @@ var fetchAllNftOfContract = (network, contractAddress, nftStandard, assetIds) =>
       console.error("Error Log: Error fetching subId: ", error);
     }
     const tokenDetails = {
-      name: "",
-      image: "",
-      assetMedia: "",
+      tokenName: "",
+      tokenImage: "",
+      tokenAssetMedia: "",
       description: "",
       contractAddress,
       assetId,
@@ -1458,16 +1470,19 @@ var fetchAllNftOfContract = (network, contractAddress, nftStandard, assetIds) =>
     try {
       if (!((_e = metaData.value) == null ? void 0 : _e.String)) {
         throw new MarketplaceError(
-          "Error fetching NFT metadata: metadata URL is missing.",
+          "Server Error: Unable to get metadata URL from contract.",
           "ServerError" /* ServerError */
         );
       }
       const { status, data } = yield import_axios2.default.get((_f = metaData.value) == null ? void 0 : _f.String);
       if (status !== 200)
-        throw new MarketplaceError("Network Error: Failed to fetch NFT metadata.", "NetworkError" /* NetworkError */);
-      tokenDetails.name = data.name;
-      tokenDetails.image = data.image;
-      tokenDetails.assetMedia = data.assetMedia;
+        throw new MarketplaceError(
+          "Network Request Error: Failed to fetch NFT metadata.",
+          "NetworkRequestError" /* NetworkRequestError */
+        );
+      tokenDetails.tokenName = data.name;
+      tokenDetails.tokenImage = data.image;
+      tokenDetails.tokenAssetMedia = data.assetMedia;
       tokenDetails.description = data.description;
     } catch (error) {
       console.error("Error Log: Error fetching NFT metadata: ", error);
@@ -1563,12 +1578,18 @@ var import_react2 = require("react");
 // src/services/subgraph/subgraph-client.ts
 var import_axios3 = __toESM(require("axios"));
 var _SubgraphClient = class _SubgraphClient {
-  constructor(network, subgraphURL) {
-    this.graphQLEndpoint = void 0;
-    this.queryString = void 0;
-    this.variables = void 0;
-    checkArguments([network, subgraphURL], "arguments");
-    this.graphQLEndpoint = subgraphURL;
+  constructor(network) {
+    this.graphQLEndpoint = "";
+    this.queryString = "";
+    this.variables = {};
+    checkArguments([network], "arguments");
+    if (!subgraphURLs[network])
+      throw new MarketplaceError(
+        "Invalid Network Argument: Subgraph URL not found for network",
+        "InvalidNetworkArgument" /* InvalidNetworkArgument */,
+        { network }
+      );
+    this.graphQLEndpoint = subgraphURLs[network];
     this.queryString = "";
     this.variables = {};
   }
@@ -1597,8 +1618,8 @@ var _SubgraphClient = class _SubgraphClient {
         _SubgraphClient.lastCallTimestamp = (/* @__PURE__ */ new Date()).getTime();
         if (status !== 200 || "errors" in data)
           throw new MarketplaceError(
-            "Error fetching data from subgraph",
-            "NetworkError" /* NetworkError */,
+            "Network Request Error: Error fetching data from subgraph",
+            "NetworkRequestError" /* NetworkRequestError */,
             data.errors
           );
         return { success: true, data: data.data[dataKey] };
@@ -1628,9 +1649,9 @@ var FETCH_COLLECTION_QUERY = `
     }
   }
 `;
-var fetchCollections = (network, subgraphURL, limit = 100) => {
-  checkArguments([network, subgraphURL], "arguments");
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+var fetchCollections = (network, limit = 100) => {
+  checkArguments([network], "arguments");
+  const subgraphClient = new SubgraphClient(network);
   return subgraphClient.setQueryString(FETCH_COLLECTION_QUERY).setVariables({
     limit
   }).query("Collection");
@@ -1658,9 +1679,9 @@ var FETCH_LISTINGS_QUERY = `
     }
   }
 `;
-var fetchListings = (network, subgraphURL, limit = 100) => {
-  checkArguments([network, subgraphURL], "arguments");
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+var fetchListings = (network, limit = 100) => {
+  checkArguments([network], "arguments");
+  const subgraphClient = new SubgraphClient(network);
   return subgraphClient.setQueryString(FETCH_LISTINGS_QUERY).setVariables({
     status: "ACTIVE",
     limit
@@ -1694,13 +1715,13 @@ var FETCH_NFT_QUERY = `
     }
   }
 `;
-var fetchNft = (network, subgraphURL, contractAddress, nftStandard, tokenId, limit = 100) => {
-  checkArguments([network, subgraphURL], "arguments");
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+var fetchNft = (network, contractAddress, nftStandard, tokenId, limit = 100) => {
+  checkArguments([network, contractAddress, nftStandard, tokenId], "arguments");
+  const subgraphClient = new SubgraphClient(network);
   return subgraphClient.setQueryString(FETCH_NFT_QUERY).setVariables({
     status: "ACTIVE",
     contractAddress,
-    nftStandard: nftStandard === "NFT" ? "NFT" : "SEMI_FT",
+    nftStandard,
     tokenId,
     limit
   }).query("Listing");
@@ -2652,8 +2673,8 @@ var NftMetadataClient = class {
     checkArguments([network], "arguments");
     if (!publicRpcs[network])
       throw new MarketplaceError(
-        `Marketplace config not found for network: ${network}`,
-        "ValidationError" /* ValidationError */
+        `Invalid Network Argument: RPC URL not found for network: ${network}`,
+        "InvalidNetworkArgument" /* InvalidNetworkArgument */
       );
     this.rpcURL = publicRpcs[network];
   }
@@ -2662,13 +2683,15 @@ var NftMetadataClient = class {
       checkArguments([provider], "arguments");
       if (provider === "WalletProvider" /* WalletProvider */ && !userWallet)
         throw new MarketplaceError(
-          "Error setting NftMetadataClient: user wallet is required when provider type is 'wallet'.",
-          "ValidationError" /* ValidationError */
+          "Invalid Arguments Error: user wallet is required when provider type is 'wallet'.",
+          "InvalidArgumentsError" /* InvalidArgumentsError */,
+          { arguments: [provider, userWallet] }
         );
       if (!this.rpcURL)
         throw new MarketplaceError(
-          "Error setting NftMetadataClient: marketplaceConfig is missing.",
-          "ValidationError" /* ValidationError */
+          "Property Undefined Error: RPC URL is missing in the properties.",
+          "PropertyUndefinedError" /* PropertyUndefinedError */,
+          { properties: [this.rpcURL] }
         );
       if (provider === "FuelProvider" /* FuelProvider */) this.provider = yield import_fuels9.Provider.create(this.rpcURL);
       else this.provider = userWallet;
@@ -2694,12 +2717,15 @@ var NftMetadataClient = class {
         const metadataURL = (_a = metadata.value) == null ? void 0 : _a.String;
         if (!metadataURL)
           throw new MarketplaceError(
-            "Error fetching NFT metadata: metadata URL is missing.",
+            "Server Error: Unable to get metadata URL from contract.",
             "ServerError" /* ServerError */
           );
         const { status, data } = yield import_axios4.default.get(metadataURL);
         if (status !== 200)
-          throw new MarketplaceError("Network Error: Failed to fetch NFT metadata.", "NetworkError" /* NetworkError */);
+          throw new MarketplaceError(
+            "Network Request Error: Failed to fetch NFT metadata.",
+            "NetworkRequestError" /* NetworkRequestError */
+          );
         return { success: true, data };
       } catch (error) {
         console.error("Error Log: Error fetching NFT metadata: ", error);
@@ -2737,9 +2763,9 @@ var SEARCH_MARKETPLACE_QUERY = `
       }
   }
 `;
-var searchMarketplace = (network, subgraphURL, searchString, limit = 100) => __async(void 0, null, function* () {
+var searchMarketplace = (network, searchString, limit = 100) => __async(void 0, null, function* () {
   checkArguments([network, searchString], "arguments");
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+  const subgraphClient = new SubgraphClient(network);
   const response = yield subgraphClient.setQueryString(SEARCH_MARKETPLACE_QUERY).setVariables({
     searchString: `%${searchString}%`,
     limit
@@ -2750,22 +2776,22 @@ var searchMarketplace = (network, subgraphURL, searchString, limit = 100) => __a
   const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
   const formattedData = searchData.map(
     (d) => ({
-      itemId: Number(d.id),
+      listingId: Number(d.id),
       isActive: d.status === "ACTIVE",
       nftAddress: d.nftAddress,
-      itemStandard: d.nftType === "NFT" ? "NFT" : "SFT",
+      tokenStandard: d.nftType,
       tokenId: d.tokenId,
       assetId: d.asset_id,
-      itemQuantity: parseInt(d.quantity),
+      tokenQuantity: parseInt(d.quantity),
       pricePerItem: getFormattedPrice(d.pricePerItem),
       sellerAddress: d.seller,
-      itemName: "",
-      itemImage: "",
-      itemMedia: ""
+      tokenName: "",
+      tokenImage: "",
+      tokenAssetMedia: ""
     })
   );
   const fetchMetadata = (d) => {
-    return metaDataClientWithProvider.setContract(d.nftAddress, d.itemStandard === "NFT" ? "NFT" /* NFT */ : "SEMI_FT" /* SEMI_FT */).getMetadata(d.assetId);
+    return metaDataClientWithProvider.setContract(d.nftAddress, d.tokenStandard).getMetadata(d.assetId);
   };
   const searchMetadataPromises = yield Promise.allSettled(formattedData.map(fetchMetadata));
   const searchResultsWithMetadata = searchMetadataPromises.map((p, i) => {
@@ -2774,9 +2800,9 @@ var searchMarketplace = (network, subgraphURL, searchString, limit = 100) => __a
     if (p.status === "fulfilled") {
       const metadata = p.value;
       if (metadata.success) {
-        result.itemName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
-        result.itemImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
-        result.itemMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
+        result.tokenName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
+        result.tokenImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
+        result.tokenAssetMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
       }
     }
     return result;
@@ -2786,25 +2812,21 @@ var searchMarketplace = (network, subgraphURL, searchString, limit = 100) => __a
 
 // src/hooks/use-collections.ts
 var import_fuels10 = require("fuels");
-var useCollections = ({
-  network,
-  subgraphURL,
-  limit
-}) => {
+var useCollections = ({ network, limit }) => {
   const [fetching, setFetching] = (0, import_react2.useState)(true);
   const [data, setData] = (0, import_react2.useState)([]);
   const [error, setError] = (0, import_react2.useState)(null);
   const fetchData = (0, import_react2.useCallback)(() => __async(void 0, null, function* () {
     setFetching(true);
-    const response = yield fetchCollections(network, subgraphURL, limit != null ? limit : 100);
+    const response = yield fetchCollections(network, limit != null ? limit : 100);
     if (response.success) {
       const collectionData = response.data;
       const meteDataClient = new NftMetadataClient(network);
       const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
       const formattedData = collectionData.map(
         (d) => ({
-          collectionId: d.id,
-          collectionStandard: d.nftType === "SEMI_FT" ? "SFT" : "NFT",
+          contractAddress: d.id,
+          tokenStandard: d.nftType,
           collectionName: d.name,
           collectionSymbol: d.symbol,
           floorPrice: getFormattedPrice(d.floorPrice),
@@ -2814,13 +2836,10 @@ var useCollections = ({
       );
       const fetchMetadata = (d) => {
         const assetId = (0, import_fuels10.getMintedAssetId)(
-          d.collectionId,
+          d.contractAddress,
           "0x0000000000000000000000000000000000000000000000000000000000000000"
         );
-        const metadataPromise = metaDataClientWithProvider.setContract(
-          d.collectionId,
-          d.collectionStandard === "NFT" ? "NFT" /* NFT */ : "SEMI_FT" /* SEMI_FT */
-        ).getMetadata(assetId);
+        const metadataPromise = metaDataClientWithProvider.setContract(d.contractAddress, d.tokenStandard).getMetadata(assetId);
         return metadataPromise;
       };
       const collectionMetadataPromises = yield Promise.allSettled(formattedData.map(fetchMetadata));
@@ -2840,7 +2859,7 @@ var useCollections = ({
       setData([]);
     }
     setFetching(false);
-  }), [network, subgraphURL, limit]);
+  }), [network, limit]);
   (0, import_react2.useEffect)(() => {
     fetchData();
   }, [fetchData]);
@@ -2849,17 +2868,13 @@ var useCollections = ({
 
 // src/hooks/use-listings.ts
 var import_react3 = require("react");
-var useListings = ({
-  network,
-  subgraphURL,
-  limit
-}) => {
+var useListings = ({ network, limit }) => {
   const [fetching, setFetching] = (0, import_react3.useState)(true);
   const [data, setData] = (0, import_react3.useState)([]);
   const [error, setError] = (0, import_react3.useState)(null);
   const fetchData = (0, import_react3.useCallback)(() => __async(void 0, null, function* () {
     setFetching(true);
-    const response = yield fetchListings(network, subgraphURL, limit != null ? limit : 100);
+    const response = yield fetchListings(network, limit != null ? limit : 100);
     if (!response.success) {
       setError(response.error);
       setData([]);
@@ -2871,22 +2886,22 @@ var useListings = ({
     const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
     const formattedData = listingData.map(
       (d) => ({
-        itemId: Number(d.id),
+        listingId: Number(d.id),
         isActive: d.status === "ACTIVE",
         nftAddress: d.nftAddress,
-        itemStandard: d.nftType === "NFT" ? "NFT" : "SFT",
+        tokenStandard: d.nftType,
         tokenId: d.tokenId,
         assetId: d.asset_id,
-        itemQuantity: parseInt(d.quantity),
+        tokenQuantity: parseInt(d.quantity),
         pricePerItem: getFormattedPrice(d.pricePerItem),
         sellerAddress: d.seller,
-        itemName: "",
-        itemImage: "",
-        itemMedia: ""
+        tokenName: "",
+        tokenImage: "",
+        tokenAssetMedia: ""
       })
     );
     const fetchMetadata = (d) => {
-      return metaDataClientWithProvider.setContract(d.nftAddress, d.itemStandard === "NFT" ? "NFT" /* NFT */ : "SEMI_FT" /* SEMI_FT */).getMetadata(d.assetId);
+      return metaDataClientWithProvider.setContract(d.nftAddress, d.tokenStandard).getMetadata(d.assetId);
     };
     const listingMetadataPromises = yield Promise.allSettled(formattedData.map(fetchMetadata));
     const listingsWithMetadata = listingMetadataPromises.map((p, i) => {
@@ -2895,9 +2910,9 @@ var useListings = ({
       if (p.status === "fulfilled") {
         const metadata = p.value;
         if (metadata.success) {
-          listing.itemName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
-          listing.itemImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
-          listing.itemMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
+          listing.tokenName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
+          listing.tokenImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
+          listing.tokenAssetMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
         }
       }
       return listing;
@@ -2905,7 +2920,7 @@ var useListings = ({
     setData(listingsWithMetadata);
     setError(null);
     setFetching(false);
-  }), [network, subgraphURL, limit]);
+  }), [network, limit]);
   (0, import_react3.useEffect)(() => {
     fetchData();
   }, [fetchData]);
@@ -2916,7 +2931,6 @@ var useListings = ({
 var import_react4 = require("react");
 var useNft = ({
   network,
-  subgraphURL,
   limit,
   contractAddress,
   nftStandard,
@@ -2927,7 +2941,7 @@ var useNft = ({
   const [error, setError] = (0, import_react4.useState)(null);
   const fetchData = (0, import_react4.useCallback)(() => __async(void 0, null, function* () {
     if (!contractAddress || !nftStandard || !tokenId) return;
-    const response = yield fetchNft(network, subgraphURL, contractAddress, nftStandard, tokenId, limit != null ? limit : 100);
+    const response = yield fetchNft(network, contractAddress, nftStandard, tokenId, limit != null ? limit : 100);
     if (!response.success) {
       setError(response.error);
       setData([]);
@@ -2939,23 +2953,23 @@ var useNft = ({
     const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
     const formattedData = listingData.map(
       (d) => ({
-        itemId: Number(d.id),
+        listingId: Number(d.id),
         isActive: d.status === "ACTIVE",
         nftAddress: d.nftAddress,
-        itemStandard: d.nftType === "NFT" ? "NFT" : "SFT",
+        tokenStandard: d.nftType,
         tokenId: d.tokenId,
         assetId: d.asset_id,
-        itemQuantity: parseInt(d.quantity),
+        tokenQuantity: parseInt(d.quantity),
         pricePerItem: getFormattedPrice(d.pricePerItem),
         sellerAddress: d.seller,
-        itemName: "",
-        itemImage: "",
-        itemMedia: "",
+        tokenName: "",
+        tokenImage: "",
+        tokenAssetMedia: "",
         description: ""
       })
     );
     const fetchMetadata = (d) => {
-      return metaDataClientWithProvider.setContract(d.nftAddress, d.itemStandard === "NFT" ? "NFT" /* NFT */ : "SEMI_FT" /* SEMI_FT */).getMetadata(d.assetId);
+      return metaDataClientWithProvider.setContract(d.nftAddress, d.tokenStandard).getMetadata(d.assetId);
     };
     const listingMetadataPromises = yield Promise.allSettled(formattedData.map(fetchMetadata));
     const listingsWithMetadata = listingMetadataPromises.map((p, i) => {
@@ -2964,9 +2978,9 @@ var useNft = ({
       if (p.status === "fulfilled") {
         const metadata = p.value;
         if (metadata.success) {
-          listing.itemName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
-          listing.itemImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
-          listing.itemMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
+          listing.tokenName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
+          listing.tokenImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
+          listing.tokenAssetMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
           listing.description = (_h = (_g = metadata.data) == null ? void 0 : _g.description) != null ? _h : "";
         }
       }
@@ -2975,7 +2989,7 @@ var useNft = ({
     setData(listingsWithMetadata);
     setError(null);
     setFetching(false);
-  }), [network, subgraphURL, contractAddress, nftStandard, tokenId, limit]);
+  }), [network, contractAddress, nftStandard, tokenId, limit]);
   (0, import_react4.useEffect)(() => {
     fetchData();
   }, [fetchData]);
@@ -2989,9 +3003,9 @@ var BuyTokenService = class extends MarketplaceServices {
     super();
     this.contract = void 0;
     this.wallet = void 0;
-    this.listingId = void 0;
-    this.quantity = void 0;
-    this.pricePerItem = void 0;
+    this.listingId = "0x";
+    this.quantity = 0;
+    this.pricePerItem = 0;
     checkArguments([contract, wallet], "arguments");
     this.contract = contract;
     this.wallet = wallet;
@@ -3011,7 +3025,7 @@ var BuyTokenService = class extends MarketplaceServices {
         const totalOrderPrice = parseFloat(this.pricePerItem.toString()) * 10 ** 9 * parseInt(this.quantity.toString());
         if (parseFloat(balance.toString()) < totalOrderPrice) {
           throw new MarketplaceError(
-            "Insufficient balance - At least ${totalOrderPrice} ETH is required to complete this transaction.",
+            "Insufficient Balance - At least ${totalOrderPrice} ETH is required to complete this transaction.",
             "InsufficientBalance" /* InsufficientBalance */,
             { balance, pricePerItem: this.pricePerItem, quantity: this.quantity, totalOrderPrice }
           );
@@ -3020,10 +3034,10 @@ var BuyTokenService = class extends MarketplaceServices {
           forward: [(0, import_fuels11.bn)(totalOrderPrice), this.wallet.provider.getBaseAssetId()]
         }).call();
         const finalTransaction = yield transactionAwaited.waitForResult();
-        return finalTransaction;
+        return { success: true, data: finalTransaction };
       } catch (error) {
         console.error("Error Log: Error executing buy token transaction: ", { error });
-        return error;
+        return { success: false, error };
       }
     });
   }
@@ -3035,7 +3049,7 @@ var CancelListingService = class extends MarketplaceServices {
   constructor(contract) {
     super();
     this.contract = void 0;
-    this.listingId = void 0;
+    this.listingId = "0x";
     checkArguments([contract], "arguments");
     this.contract = contract;
   }
@@ -3050,10 +3064,10 @@ var CancelListingService = class extends MarketplaceServices {
       try {
         const transactionAwaited = yield this.contract.functions.cancel_listing((0, import_fuels12.bn)(this.listingId)).call();
         const finalTransaction = yield transactionAwaited.waitForResult();
-        return finalTransaction;
+        return { success: true, data: finalTransaction };
       } catch (error) {
         console.error("Error Log: Error executing cancel listing transaction: ", { error });
-        return error;
+        return { success: false, error };
       }
     });
   }
@@ -3065,19 +3079,19 @@ var ListTokenService = class extends MarketplaceServices {
   constructor(contract) {
     super();
     this.contract = void 0;
-    this.assetId = void 0;
-    this.contractId = void 0;
-    this.subId = void 0;
-    this.price = void 0;
-    this.amount = void 0;
+    this.assetId = "0x";
+    this.contractAddress = "0x";
+    this.subId = "0x";
+    this.price = 0;
+    this.amount = 0;
     this.tokenStandard = void 0;
     checkArguments([contract], "arguments");
     this.contract = contract;
   }
-  setProperties(assetId, contractId, subId, price, amount, tokenStandard) {
-    checkArguments([assetId, contractId, subId, price, amount, tokenStandard], "arguments");
+  setProperties(assetId, contractAddress, subId, price, amount, tokenStandard) {
+    checkArguments([assetId, contractAddress, subId, price, amount, tokenStandard], "arguments");
     this.assetId = assetId;
-    this.contractId = contractId;
+    this.contractAddress = contractAddress;
     this.subId = subId;
     this.price = price;
     this.amount = amount;
@@ -3087,12 +3101,12 @@ var ListTokenService = class extends MarketplaceServices {
   execute() {
     return __async(this, null, function* () {
       checkArguments(
-        [this.contract, this.assetId, this.contractId, this.subId, this.price, this.amount, this.tokenStandard],
+        [this.contract, this.assetId, this.contractAddress, this.subId, this.price, this.amount, this.tokenStandard],
         "properties"
       );
       try {
         const contractIdInput = {
-          bits: this.contractId
+          bits: this.contractAddress
         };
         const transactionAwaited = yield this.contract.functions.list_nft(
           contractIdInput,
@@ -3105,10 +3119,10 @@ var ListTokenService = class extends MarketplaceServices {
         }).call();
         const finalTransaction = yield transactionAwaited.waitForResult();
         if (!finalTransaction.transactionId) return null;
-        return finalTransaction;
+        return { success: true, data: finalTransaction };
       } catch (error) {
         console.error("Error Log: Error executing list token transaction: ", { error });
-        return error;
+        return { success: false, error };
       }
     });
   }
@@ -3121,9 +3135,9 @@ var ModifyListingService = class extends MarketplaceServices {
     super();
     this.contract = void 0;
     this.assetId = void 0;
-    this.listingId = void 0;
-    this.newPrice = void 0;
-    this.quantityToAdd = void 0;
+    this.listingId = "0x";
+    this.newPrice = 0;
+    this.quantityToAdd = 0;
     checkArguments([contract], "arguments");
     this.contract = contract;
   }
@@ -3151,10 +3165,10 @@ var ModifyListingService = class extends MarketplaceServices {
         }
         const transactionAwaited = yield contractCall.call();
         const finalTransaction = yield transactionAwaited.waitForResult();
-        return finalTransaction;
+        return { success: true, data: finalTransaction };
       } catch (error) {
         console.error("Error Log: Error executing buy token transaction: ", { error });
-        return error;
+        return { success: false, error };
       }
     });
   }
@@ -3162,53 +3176,34 @@ var ModifyListingService = class extends MarketplaceServices {
 
 // src/services/marketplace/marketplace-client.ts
 var MarketplaceClient = class {
-  constructor(network, marketplaceAddress, wallet) {
+  constructor(network, wallet) {
     this.contract = void 0;
     this.wallet = void 0;
-    this.service = void 0;
-    checkArguments([network, marketplaceAddress, wallet], "arguments");
-    this.contract = new NftMarketplace(marketplaceAddress, wallet);
+    checkArguments([network, wallet], "arguments");
+    if (!marketplaceAddresses[network])
+      throw new MarketplaceError(
+        "Invalid Network Argument: Marketplace address not found for network",
+        "InvalidNetworkArgument" /* InvalidNetworkArgument */,
+        { network }
+      );
+    this.contract = new NftMarketplace(marketplaceAddresses[network], wallet);
     this.wallet = wallet;
   }
-  useService(service) {
-    checkArguments([service], "arguments");
-    if (service === "buyTokenService") {
-      checkArguments([this.contract, this.wallet], "properties");
-      this.service = new BuyTokenService(this.contract, this.wallet);
-      return this;
-    }
+  useBuyTokenService() {
+    checkArguments([this.contract, this.wallet], "properties");
+    return new BuyTokenService(this.contract, this.wallet);
+  }
+  useCancelListingService() {
     checkArguments([this.contract], "properties");
-    if (service === "cancelListingService") this.service = new CancelListingService(this.contract);
-    if (service === "listTokenService") this.service = new ListTokenService(this.contract);
-    if (service === "modifyListingService") this.service = new ModifyListingService(this.contract);
-    return this;
+    return new CancelListingService(this.contract);
   }
-  setProperties(...properties) {
-    checkArguments(properties, "arguments");
-    if (this.service instanceof BuyTokenService)
-      this.service.setProperties(properties[0], properties[1], properties[2]);
-    if (this.service instanceof CancelListingService) this.service.setProperties(properties[0]);
-    if (this.service instanceof ListTokenService)
-      this.service.setProperties(
-        properties[0],
-        properties[1],
-        properties[2],
-        properties[3],
-        properties[4],
-        properties[5]
-      );
-    if (this.service instanceof ModifyListingService)
-      this.service.setProperties(
-        properties[0],
-        properties[1],
-        properties[2],
-        properties.length > 3 ? properties[3] : void 0
-      );
-    return this;
+  useListTokenService() {
+    checkArguments([this.contract], "properties");
+    return new ListTokenService(this.contract);
   }
-  executeTransaction() {
-    checkArguments([this.service], "properties");
-    return this.service.execute();
+  useModifyListingService() {
+    checkArguments([this.contract], "properties");
+    return new ModifyListingService(this.contract);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

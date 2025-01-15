@@ -25,10 +25,10 @@ const FETCH_LISTINGS_QUERY = `
   }
 `;
 
-export const fetchListings = (network: Networks, subgraphURL: string, limit: number = 100) => {
-  checkArguments([network, subgraphURL], 'arguments');
+export const fetchListings = (network: Networks, limit: number = 100) => {
+  checkArguments([network], 'arguments');
 
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+  const subgraphClient = new SubgraphClient(network);
   return subgraphClient
     .setQueryString(FETCH_LISTINGS_QUERY)
     .setVariables({

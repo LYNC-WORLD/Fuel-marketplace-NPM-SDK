@@ -1,6 +1,12 @@
 import { useAllNftsInCollection, useCollections, useListings, useNft } from '@/hooks';
 import { AllowedProviders, MarketplaceErrorCodes, Networks } from '@/enums';
-import { MarketplaceError, MarketplaceListings, MarketplaceCollections, NftDetails, TokenDetails } from '@/interfaces';
+import {
+  MarketplaceError,
+  MarketplaceListings,
+  MarketplaceCollections,
+  NftDetails,
+  TokensInCollection,
+} from '@/interfaces';
 import { MarketplaceClient } from '@/services/marketplace';
 import { searchMarketplace } from '@/services/orders';
 import { checkNftOwnership } from '@/utils';
@@ -22,7 +28,7 @@ export {
   type MarketplaceListings,
   type MarketplaceCollections,
   type NftDetails,
-  type TokenDetails,
+  type TokensInCollection,
 
   /* -- Services -- */
   MarketplaceClient,

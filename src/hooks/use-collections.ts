@@ -6,18 +6,14 @@ import { AllowedProviders } from '@/enums';
 import { getMintedAssetId } from 'fuels';
 import { NFTStandardOutput } from '@/contracts/marketplace';
 
-export const useCollections = ({
-  network,
-  subgraphURL,
-  limit,
-}: HooksArgs): Readonly<HooksReturn<MarketplaceCollections[]>> => {
+export const useCollections = ({ network, limit }: HooksArgs): Readonly<HooksReturn<MarketplaceCollections[]>> => {
   const [fetching, setFetching] = useState<boolean>(true);
   const [data, setData] = useState<MarketplaceCollections[]>([]);
   const [error, setError] = useState<unknown>(null);
 
   const fetchData = useCallback(async () => {
     setFetching(true);
-    const response = await fetchCollections(network, subgraphURL, limit ?? 100);
+    const response = await fetchCollections(network, limit ?? 100);
 
     if (response.success) {
       const collectionData = response.data;
@@ -28,8 +24,8 @@ export const useCollections = ({
       const formattedData = collectionData!.map(
         (d) =>
           ({
-            collectionId: d.id,
-            collectionStandard: d.nftType === 'SEMI_FT' ? 'SFT' : 'NFT',
+            contractAddress: d.id,
+            tokenStandard: d.nftType,
             collectionName: d.name,
             collectionSymbol: d.symbol,
             floorPrice: getFormattedPrice(d.floorPrice),
@@ -40,15 +36,12 @@ export const useCollections = ({
 
       const fetchMetadata = (d: MarketplaceCollections) => {
         const assetId = getMintedAssetId(
-          d.collectionId,
+          d.contractAddress,
           '0x0000000000000000000000000000000000000000000000000000000000000000'
         );
 
         const metadataPromise = metaDataClientWithProvider
-          .setContract(
-            d.collectionId,
-            d.collectionStandard === 'NFT' ? NFTStandardOutput.NFT : NFTStandardOutput.SEMI_FT
-          )
+          .setContract(d.contractAddress, d.tokenStandard as NFTStandardOutput)
           .getMetadata<CollectionMetadata>(assetId);
 
         return metadataPromise;
@@ -79,7 +72,7 @@ export const useCollections = ({
     }
 
     setFetching(false);
-  }, [network, subgraphURL, limit]);
+  }, [network, limit]);
 
   useEffect(() => {
     fetchData();

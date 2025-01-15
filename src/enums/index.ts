@@ -9,7 +9,9 @@ export enum Networks {
 
 export enum MarketplaceErrorCodes {
   InsufficientBalance = 'InsufficientBalance',
-  NetworkError = 'NetworkError',
+  InvalidArgumentsError = 'InvalidArgumentsError',
+  InvalidNetworkArgument = 'InvalidNetworkArgument',
+  NetworkRequestError = 'NetworkRequestError',
+  PropertyUndefinedError = 'PropertyUndefinedError',
   ServerError = 'ServerError',
-  ValidationError = 'ValidationError',
 }

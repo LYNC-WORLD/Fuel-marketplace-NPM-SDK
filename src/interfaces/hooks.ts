@@ -8,17 +8,17 @@ export interface HooksReturn<TReturnData = unknown> {
 
 export interface HooksArgs {
   network: Networks;
-  subgraphURL: string;
   limit?: number;
 }
 
-export interface AllNftsInCollectionArgs extends Pick<HooksArgs, 'network'> {
-  nftStandard: 'NFT' | 'SFT';
+export interface AllNftsInCollectionArgs {
+  network: Networks;
+  nftStandard: 'NFT' | 'SEMI_FT';
   contractAddress: `0x${string}`;
 }
 
 export interface NftDetailsArgs extends HooksArgs {
   contractAddress: `0x${string}`;
   tokenId: string;
-  nftStandard: 'NFT' | 'SFT';
+  nftStandard: 'NFT' | 'SEMI_FT';
 }

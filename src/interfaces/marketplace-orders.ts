@@ -1,6 +1,3 @@
-import { Networks } from '@/enums';
-import { Account } from 'fuels';
-
 export interface SubgraphListingData {
   id: string;
   status: 'ACTIVE' | 'INACTIVE';
@@ -14,18 +11,18 @@ export interface SubgraphListingData {
 }
 
 export interface MarketplaceListings {
-  itemId: number;
+  listingId: number;
   isActive: boolean;
   nftAddress: `0x${string}`;
-  itemStandard: 'NFT' | 'SFT';
+  tokenStandard: 'NFT' | 'SEMI_FT';
   tokenId: `0x${string}`;
   assetId: `0x${string}`;
-  itemQuantity: number;
+  tokenQuantity: number;
   pricePerItem: string;
   sellerAddress: `0x${string}`;
-  itemName: string;
-  itemImage: string;
-  itemMedia: string;
+  tokenName: string;
+  tokenImage: string;
+  tokenAssetMedia: string;
 }
 
 export interface SubgraphCollectionData {
@@ -38,8 +35,8 @@ export interface SubgraphCollectionData {
 }
 
 export interface MarketplaceCollections {
-  collectionId: `0x${string}`;
-  collectionStandard: 'NFT' | 'SFT';
+  contractAddress: `0x${string}`;
+  tokenStandard: 'NFT' | 'SEMI_FT';
   collectionName: string;
   collectionSymbol: string;
   floorPrice: string;
@@ -47,28 +44,17 @@ export interface MarketplaceCollections {
   bannerImage: string;
 }
 
-export interface TokenDetails {
-  name: string;
-  image: string;
-  assetMedia: string;
+export interface TokensInCollection {
+  tokenName: string;
+  tokenImage: string;
+  tokenAssetMedia: string;
   description: string;
   contractAddress: `0x${string}`;
+  tokenId: `0x${string}`;
   assetId: `0x${string}`;
-  tokenStandard: 'NFT' | 'SFT';
+  tokenStandard: 'NFT' | 'SEMI_FT';
   contractName: string;
   contractSymbol: string;
-  tokenId: `0x${string}`;
-}
-
-export interface FetchOwnedNftArgs {
-  network: Networks;
-  subgraphURL: string;
-  wallet: Account;
-  nftDetails: {
-    contractAddress: `0x${string}`;
-    subId: `0x${string}`;
-    nftStandard: 'NFT' | 'SFT';
-  };
 }
 
 export interface NftDetails extends MarketplaceListings {

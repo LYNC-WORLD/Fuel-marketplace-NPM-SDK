@@ -18,8 +18,8 @@ export class NftMetadataClient {
 
     if (!publicRpcs[network])
       throw new MarketplaceError(
-        `Marketplace config not found for network: ${network}`,
-        MarketplaceErrorCodes.ValidationError
+        `Invalid Network Argument: RPC URL not found for network: ${network}`,
+        MarketplaceErrorCodes.InvalidNetworkArgument
       );
 
     this.rpcURL = publicRpcs[network];
@@ -30,14 +30,16 @@ export class NftMetadataClient {
 
     if (provider === AllowedProviders.WalletProvider && !userWallet)
       throw new MarketplaceError(
-        "Error setting NftMetadataClient: user wallet is required when provider type is 'wallet'.",
-        MarketplaceErrorCodes.ValidationError
+        "Invalid Arguments Error: user wallet is required when provider type is 'wallet'.",
+        MarketplaceErrorCodes.InvalidArgumentsError,
+        { arguments: [provider, userWallet] }
       );
 
     if (!this.rpcURL)
       throw new MarketplaceError(
-        'Error setting NftMetadataClient: marketplaceConfig is missing.',
-        MarketplaceErrorCodes.ValidationError
+        'Property Undefined Error: RPC URL is missing in the properties.',
+        MarketplaceErrorCodes.PropertyUndefinedError,
+        { properties: [this.rpcURL] }
       );
 
     if (provider === AllowedProviders.FuelProvider) this.provider = await Provider.create(this.rpcURL);
@@ -69,13 +71,16 @@ export class NftMetadataClient {
 
       if (!metadataURL)
         throw new MarketplaceError(
-          'Error fetching NFT metadata: metadata URL is missing.',
+          'Server Error: Unable to get metadata URL from contract.',
           MarketplaceErrorCodes.ServerError
         );
 
       const { status, data } = await axios.get<TData>(metadataURL);
       if (status !== 200)
-        throw new MarketplaceError('Network Error: Failed to fetch NFT metadata.', MarketplaceErrorCodes.NetworkError);
+        throw new MarketplaceError(
+          'Network Request Error: Failed to fetch NFT metadata.',
+          MarketplaceErrorCodes.NetworkRequestError
+        );
 
       return { success: true, data };
     } catch (error: unknown) {

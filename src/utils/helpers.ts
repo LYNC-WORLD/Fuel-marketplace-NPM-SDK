@@ -10,10 +10,14 @@ export const checkArguments = (args: Array<unknown>, type: 'arguments' | 'proper
     const argsString = args.map((arg) => String(arg)).join(', ');
     const errorMsg =
       type === 'arguments'
-        ? `Invalid argument${args.length > 1 ? 's' : ''} - ${argsString} ${args.length > 1 ? 'are' : 'is'} required.`
-        : `${args.length > 1 ? 'Properties' : 'Property'} not found - ${argsString} ${args.length > 1 ? 'are' : 'is'} required.`;
+        ? `Invalid argument${args.length > 1 ? 's' : ''} Error: ${argsString} ${args.length > 1 ? 'are' : 'is'} required.`
+        : `${args.length > 1 ? 'Properties' : 'Property'} Undefined Error: ${argsString} ${args.length > 1 ? 'are' : 'is'} not defined.`;
 
-    throw new MarketplaceError(errorMsg, MarketplaceErrorCodes.ValidationError);
+    throw new MarketplaceError(
+      `${type === 'arguments' ? 'Invalid Arguments Error' : 'Properties Undefined Error'}: ${errorMsg}`,
+      type === 'arguments' ? MarketplaceErrorCodes.InvalidArgumentsError : MarketplaceErrorCodes.PropertyUndefinedError,
+      type === 'arguments' ? { arguments: args } : { properties: args }
+    );
   }
 };
 

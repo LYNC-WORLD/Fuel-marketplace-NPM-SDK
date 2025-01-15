@@ -2,18 +2,26 @@ import axios from 'axios';
 import { MarketplaceErrorCodes, Networks } from '@/enums';
 import { MarketplaceError, SubgraphErrorResponse, SubgraphSuccessResponse } from '@/interfaces';
 import { checkArguments, sleep } from '@/utils';
+import { subgraphURLs } from '@/configs';
 
 export class SubgraphClient {
-  private readonly graphQLEndpoint: string | undefined = undefined;
-  private queryString: string | undefined = undefined;
-  private variables: Record<string, unknown> | undefined = undefined;
+  private readonly graphQLEndpoint: string = '';
+  private queryString: string = '';
+  private variables: Record<string, unknown> = {};
 
   private static lastCallTimestamp: number = 0;
 
-  constructor(network: Networks, subgraphURL: string) {
-    checkArguments([network, subgraphURL], 'arguments');
+  constructor(network: Networks) {
+    checkArguments([network], 'arguments');
 
-    this.graphQLEndpoint = subgraphURL;
+    if (!subgraphURLs[network])
+      throw new MarketplaceError(
+        'Invalid Network Argument: Subgraph URL not found for network',
+        MarketplaceErrorCodes.InvalidNetworkArgument,
+        { network }
+      );
+
+    this.graphQLEndpoint = subgraphURLs[network];
     this.queryString = '';
     this.variables = {};
   }
@@ -39,7 +47,7 @@ export class SubgraphClient {
 
     try {
       const { status, data } = await axios.post<SubgraphErrorResponse | SubgraphSuccessResponse<TData>>(
-        this.graphQLEndpoint as string,
+        this.graphQLEndpoint,
         { query: this.queryString, variables: this.variables },
         { headers: { 'Content-Type': 'application/json' } }
       );
@@ -48,8 +56,8 @@ export class SubgraphClient {
 
       if (status !== 200 || 'errors' in data)
         throw new MarketplaceError(
-          'Error fetching data from subgraph',
-          MarketplaceErrorCodes.NetworkError,
+          'Network Request Error: Error fetching data from subgraph',
+          MarketplaceErrorCodes.NetworkRequestError,
           (data as SubgraphErrorResponse).errors
         );
 

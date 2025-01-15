@@ -33,15 +33,10 @@ const SEARCH_MARKETPLACE_QUERY = `
   }
 `;
 
-export const searchMarketplace = async (
-  network: Networks,
-  subgraphURL: string,
-  searchString: string,
-  limit: number = 100
-) => {
+export const searchMarketplace = async (network: Networks, searchString: string, limit: number = 100) => {
   checkArguments([network, searchString], 'arguments');
 
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+  const subgraphClient = new SubgraphClient(network);
   const response = await subgraphClient
     .setQueryString(SEARCH_MARKETPLACE_QUERY)
     .setVariables({
@@ -60,24 +55,24 @@ export const searchMarketplace = async (
   const formattedData = searchData.map(
     (d) =>
       ({
-        itemId: Number(d.id),
+        listingId: Number(d.id),
         isActive: d.status === 'ACTIVE',
         nftAddress: d.nftAddress,
-        itemStandard: d.nftType === 'NFT' ? 'NFT' : 'SFT',
+        tokenStandard: d.nftType,
         tokenId: d.tokenId,
         assetId: d.asset_id,
-        itemQuantity: parseInt(d.quantity),
+        tokenQuantity: parseInt(d.quantity),
         pricePerItem: getFormattedPrice(d.pricePerItem),
         sellerAddress: d.seller,
-        itemName: '',
-        itemImage: '',
-        itemMedia: '',
+        tokenName: '',
+        tokenImage: '',
+        tokenAssetMedia: '',
       }) as MarketplaceListings
   );
 
   const fetchMetadata = (d: MarketplaceListings) => {
     return metaDataClientWithProvider
-      .setContract(d.nftAddress, d.itemStandard === 'NFT' ? NFTStandardOutput.NFT : NFTStandardOutput.SEMI_FT)
+      .setContract(d.nftAddress, d.tokenStandard as NFTStandardOutput)
       .getMetadata<ListingMetadata>(d.assetId);
   };
 
@@ -94,9 +89,9 @@ export const searchMarketplace = async (
       const metadata = p.value;
 
       if (metadata.success) {
-        result.itemName = metadata.data?.name ?? '';
-        result.itemImage = metadata.data?.image ?? '';
-        result.itemMedia = metadata.data?.assetMedia ?? '';
+        result.tokenName = metadata.data?.name ?? '';
+        result.tokenImage = metadata.data?.image ?? '';
+        result.tokenAssetMedia = metadata.data?.assetMedia ?? '';
       }
     }
 

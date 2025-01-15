@@ -7,7 +7,6 @@ import { NFTStandardOutput } from '@/contracts/marketplace';
 
 export const useNft = ({
   network,
-  subgraphURL,
   limit,
   contractAddress,
   nftStandard,
@@ -20,7 +19,7 @@ export const useNft = ({
   const fetchData = useCallback(async () => {
     if (!contractAddress || !nftStandard || !tokenId) return;
 
-    const response = await fetchNft(network, subgraphURL, contractAddress, nftStandard, tokenId, limit ?? 100);
+    const response = await fetchNft(network, contractAddress, nftStandard, tokenId, limit ?? 100);
 
     if (!response.success) {
       setError(response.error);
@@ -37,25 +36,25 @@ export const useNft = ({
     const formattedData = listingData!.map(
       (d) =>
         ({
-          itemId: Number(d.id),
+          listingId: Number(d.id),
           isActive: d.status === 'ACTIVE',
           nftAddress: d.nftAddress,
-          itemStandard: d.nftType === 'NFT' ? 'NFT' : 'SFT',
+          tokenStandard: d.nftType,
           tokenId: d.tokenId,
           assetId: d.asset_id,
-          itemQuantity: parseInt(d.quantity),
+          tokenQuantity: parseInt(d.quantity),
           pricePerItem: getFormattedPrice(d.pricePerItem),
           sellerAddress: d.seller,
-          itemName: '',
-          itemImage: '',
-          itemMedia: '',
+          tokenName: '',
+          tokenImage: '',
+          tokenAssetMedia: '',
           description: '',
         }) as NftDetails
     );
 
     const fetchMetadata = (d: NftDetails) => {
       return metaDataClientWithProvider
-        .setContract(d.nftAddress, d.itemStandard === 'NFT' ? NFTStandardOutput.NFT : NFTStandardOutput.SEMI_FT)
+        .setContract(d.nftAddress, d.tokenStandard as NFTStandardOutput)
         .getMetadata<ListingMetadata>(d.assetId);
     };
 
@@ -72,9 +71,9 @@ export const useNft = ({
         const metadata = p.value;
 
         if (metadata.success) {
-          listing.itemName = metadata.data?.name ?? '';
-          listing.itemImage = metadata.data?.image ?? '';
-          listing.itemMedia = metadata.data?.assetMedia ?? '';
+          listing.tokenName = metadata.data?.name ?? '';
+          listing.tokenImage = metadata.data?.image ?? '';
+          listing.tokenAssetMedia = metadata.data?.assetMedia ?? '';
           listing.description = metadata.data?.description ?? '';
         }
       }
@@ -86,7 +85,7 @@ export const useNft = ({
     setError(null);
 
     setFetching(false);
-  }, [network, subgraphURL, contractAddress, nftStandard, tokenId, limit]);
+  }, [network, contractAddress, nftStandard, tokenId, limit]);
 
   useEffect(() => {
     fetchData();

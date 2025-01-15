@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { Account, Address, getMintedAssetId, isB256, Provider } from 'fuels';
 import { MarketplaceErrorCodes, Networks } from '@/enums';
-import { ContractBalancesQueryResponse, MarketplaceError, SubgraphErrorResponse, TokenDetails } from '@/interfaces';
+import {
+  ContractBalancesQueryResponse,
+  MarketplaceError,
+  SubgraphErrorResponse,
+  TokensInCollection,
+} from '@/interfaces';
 import { publicRpcs } from '@/configs';
 import { NonFungibleCreator } from '@/contracts/non-fungible';
 import { SemiFungibleCreator } from '@/contracts/semi-fungible';
@@ -32,8 +37,8 @@ export const getContractBalances = async (network: Networks, contractAddress: `0
 
     if (status !== 200 || 'errors' in data)
       throw new MarketplaceError(
-        'Error fetching data from fuel network',
-        MarketplaceErrorCodes.NetworkError,
+        'Network Request Error: Error fetching data from fuel network',
+        MarketplaceErrorCodes.NetworkRequestError,
         (data as SubgraphErrorResponse).errors
       );
 
@@ -47,12 +52,12 @@ export const getContractBalances = async (network: Networks, contractAddress: `0
 export const fetchAllNftOfContract = async (
   network: Networks,
   contractAddress: `0x${string}`,
-  nftStandard: 'NFT' | 'SFT',
+  nftStandard: 'NFT' | 'SEMI_FT',
   assetIds: string[]
 ) => {
   let SUB_ID = '0x0000000000000000000000000000000000000000000000000000000000000000';
   const provider = await Provider.create(publicRpcs[network]);
-  const allNftsOfContract: TokenDetails[] = [];
+  const allNftsOfContract: TokensInCollection[] = [];
 
   const CreatorContract = nftStandard === 'NFT' ? NonFungibleCreator : SemiFungibleCreator;
   const contract = new CreatorContract(contractAddress, provider);
@@ -69,10 +74,10 @@ export const fetchAllNftOfContract = async (
       console.error('Error Log: Error fetching subId: ', error);
     }
 
-    const tokenDetails: TokenDetails = {
-      name: '',
-      image: '',
-      assetMedia: '',
+    const tokenDetails: TokensInCollection = {
+      tokenName: '',
+      tokenImage: '',
+      tokenAssetMedia: '',
       description: '',
       contractAddress: contractAddress,
       assetId: assetId as `0x${string}`,
@@ -85,18 +90,21 @@ export const fetchAllNftOfContract = async (
     try {
       if (!metaData.value?.String) {
         throw new MarketplaceError(
-          'Error fetching NFT metadata: metadata URL is missing.',
+          'Server Error: Unable to get metadata URL from contract.',
           MarketplaceErrorCodes.ServerError
         );
       }
 
       const { status, data } = await axios.get(metaData.value?.String);
       if (status !== 200)
-        throw new MarketplaceError('Network Error: Failed to fetch NFT metadata.', MarketplaceErrorCodes.NetworkError);
+        throw new MarketplaceError(
+          'Network Request Error: Failed to fetch NFT metadata.',
+          MarketplaceErrorCodes.NetworkRequestError
+        );
 
-      tokenDetails.name = data.name;
-      tokenDetails.image = data.image;
-      tokenDetails.assetMedia = data.assetMedia;
+      tokenDetails.tokenName = data.name;
+      tokenDetails.tokenImage = data.image;
+      tokenDetails.tokenAssetMedia = data.assetMedia;
       tokenDetails.description = data.description;
     } catch (error: unknown) {
       console.error('Error Log: Error fetching NFT metadata: ', error);
@@ -112,7 +120,7 @@ export const checkNftOwnership = async (
   wallet: Account,
   contractAddress: `0x${string}`,
   subId: `0x${string}`,
-  nftStandard: 'NFT' | 'SFT'
+  nftStandard: 'NFT' | 'SEMI_FT'
 ) => {
   checkArguments([wallet, contractAddress, subId, nftStandard], 'arguments');
   const errors: string[] = [];

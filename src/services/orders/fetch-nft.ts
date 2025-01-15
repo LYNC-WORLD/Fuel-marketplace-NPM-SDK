@@ -32,21 +32,20 @@ const FETCH_NFT_QUERY = `
 
 export const fetchNft = (
   network: Networks,
-  subgraphURL: string,
   contractAddress: string,
-  nftStandard: 'NFT' | 'SFT',
+  nftStandard: 'NFT' | 'SEMI_FT',
   tokenId: string,
   limit: number = 100
 ) => {
-  checkArguments([network, subgraphURL], 'arguments');
+  checkArguments([network, contractAddress, nftStandard, tokenId], 'arguments');
 
-  const subgraphClient = new SubgraphClient(network, subgraphURL);
+  const subgraphClient = new SubgraphClient(network);
   return subgraphClient
     .setQueryString(FETCH_NFT_QUERY)
     .setVariables({
       status: 'ACTIVE',
       contractAddress,
-      nftStandard: nftStandard === 'NFT' ? 'NFT' : 'SEMI_FT',
+      nftStandard,
       tokenId,
       limit,
     })

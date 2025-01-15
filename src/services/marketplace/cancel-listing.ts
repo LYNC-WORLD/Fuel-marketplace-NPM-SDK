@@ -5,7 +5,7 @@ import { checkArguments } from '@/utils';
 
 export class CancelListingService extends MarketplaceServices {
   private readonly contract: NftMarketplace | undefined = undefined;
-  private listingId: `0x${string}` | undefined = undefined;
+  private listingId: `0x${string}` = '0x';
 
   constructor(contract: NftMarketplace) {
     super();
@@ -27,10 +27,10 @@ export class CancelListingService extends MarketplaceServices {
       const transactionAwaited = await this.contract!.functions.cancel_listing(bn(this.listingId)).call();
       const finalTransaction = await transactionAwaited.waitForResult();
 
-      return finalTransaction;
+      return { success: true, data: finalTransaction };
     } catch (error: unknown) {
       console.error('Error Log: Error executing cancel listing transaction: ', { error });
-      return error;
+      return { success: false, error };
     }
   }
 }

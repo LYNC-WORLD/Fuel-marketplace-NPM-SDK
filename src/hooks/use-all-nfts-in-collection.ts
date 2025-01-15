@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Address } from 'fuels';
-import { HooksReturn, AllNftsInCollectionArgs, TokenDetails } from '@/interfaces';
+import { HooksReturn, AllNftsInCollectionArgs, TokensInCollection } from '@/interfaces';
 import { fetchAllNftOfContract, getContractBalances } from '@/utils';
 
 export const useAllNftsInCollection = ({
   network,
   nftStandard,
   contractAddress,
-}: AllNftsInCollectionArgs): Readonly<HooksReturn<TokenDetails[]>> => {
+}: AllNftsInCollectionArgs): Readonly<HooksReturn<TokensInCollection[]>> => {
   const [fetching, setFetching] = useState<boolean>(true);
-  const [data, setData] = useState<TokenDetails[]>([]);
+  const [data, setData] = useState<TokensInCollection[]>([]);
   const [error, setError] = useState<unknown>(null);
 
   const fetchData = useCallback(async () => {
@@ -52,5 +52,5 @@ export const useAllNftsInCollection = ({
     fetchData();
   }, [fetchData]);
 
-  return { fetching, data, error } as const satisfies HooksReturn<TokenDetails[]>;
+  return { fetching, data, error } as const satisfies HooksReturn<TokensInCollection[]>;
 };
