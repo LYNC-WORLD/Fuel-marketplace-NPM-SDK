@@ -2929,6 +2929,13 @@ var useListings = ({ network, limit }) => {
 
 // src/hooks/use-nft.ts
 var import_react4 = require("react");
+var import_fuels11 = require("fuels");
+var placeholderMetadata = {
+  tokenName: "",
+  tokenImage: "",
+  tokenAssetMedia: "",
+  description: ""
+};
 var useNft = ({
   network,
   limit,
@@ -2937,56 +2944,48 @@ var useNft = ({
   tokenId
 }) => {
   const [fetching, setFetching] = (0, import_react4.useState)(true);
-  const [data, setData] = (0, import_react4.useState)([]);
+  const [data, setData] = (0, import_react4.useState)({
+    listingData: [],
+    nftMetadata: placeholderMetadata
+  });
   const [error, setError] = (0, import_react4.useState)(null);
   const fetchData = (0, import_react4.useCallback)(() => __async(void 0, null, function* () {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     if (!contractAddress || !nftStandard || !tokenId) return;
+    const mintedAssetId = (0, import_fuels11.getMintedAssetId)(contractAddress, tokenId);
+    const metadata = placeholderMetadata;
+    const meteDataClient = new NftMetadataClient(network);
+    const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
+    const listingMetadata = yield metaDataClientWithProvider.setContract(contractAddress, nftStandard).getMetadata(mintedAssetId);
+    if (listingMetadata.success) {
+      metadata.description = (_b = (_a = listingMetadata.data) == null ? void 0 : _a.description) != null ? _b : "";
+      metadata.tokenName = (_d = (_c = listingMetadata.data) == null ? void 0 : _c.name) != null ? _d : "";
+      metadata.tokenImage = (_f = (_e = listingMetadata.data) == null ? void 0 : _e.image) != null ? _f : "";
+      metadata.tokenAssetMedia = (_h = (_g = listingMetadata.data) == null ? void 0 : _g.assetMedia) != null ? _h : "";
+    }
     const response = yield fetchNft(network, contractAddress, nftStandard, tokenId, limit != null ? limit : 100);
     if (!response.success) {
       setError(response.error);
-      setData([]);
+      setData({
+        listingData: [],
+        nftMetadata: metadata
+      });
       setFetching(false);
       return;
     }
     const listingData = response.data;
-    const meteDataClient = new NftMetadataClient(network);
-    const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
-    const formattedData = listingData.map(
-      (d) => ({
-        listingId: Number(d.id),
-        isActive: d.status === "ACTIVE",
-        nftAddress: d.nftAddress,
-        tokenStandard: d.nftType,
-        tokenId: d.tokenId,
-        assetId: d.asset_id,
-        tokenQuantity: parseInt(d.quantity),
-        pricePerItem: getFormattedPrice(d.pricePerItem),
-        sellerAddress: d.seller,
-        tokenName: "",
-        tokenImage: "",
-        tokenAssetMedia: "",
-        description: ""
-      })
-    );
-    const fetchMetadata = (d) => {
-      return metaDataClientWithProvider.setContract(d.nftAddress, d.tokenStandard).getMetadata(d.assetId);
-    };
-    const listingMetadataPromises = yield Promise.allSettled(formattedData.map(fetchMetadata));
-    const listingsWithMetadata = listingMetadataPromises.map((p, i) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h;
-      const listing = formattedData[i];
-      if (p.status === "fulfilled") {
-        const metadata = p.value;
-        if (metadata.success) {
-          listing.tokenName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
-          listing.tokenImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
-          listing.tokenAssetMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
-          listing.description = (_h = (_g = metadata.data) == null ? void 0 : _g.description) != null ? _h : "";
-        }
-      }
-      return listing;
-    });
-    setData(listingsWithMetadata);
+    const formattedData = listingData.map((d) => ({
+      listingId: Number(d.id),
+      isActive: d.status === "ACTIVE",
+      nftAddress: d.nftAddress,
+      tokenStandard: d.nftType,
+      tokenId: d.tokenId,
+      assetId: d.asset_id,
+      tokenQuantity: parseInt(d.quantity),
+      pricePerItem: getFormattedPrice(d.pricePerItem),
+      sellerAddress: d.seller
+    }));
+    setData({ listingData: formattedData, nftMetadata: metadata });
     setError(null);
     setFetching(false);
   }), [network, contractAddress, nftStandard, tokenId, limit]);
@@ -2997,7 +2996,7 @@ var useNft = ({
 };
 
 // src/services/marketplace/buy-token.ts
-var import_fuels11 = require("fuels");
+var import_fuels12 = require("fuels");
 var BuyTokenService = class extends MarketplaceServices {
   constructor(contract, wallet) {
     super();
@@ -3030,8 +3029,8 @@ var BuyTokenService = class extends MarketplaceServices {
             { balance, pricePerItem: this.pricePerItem, quantity: this.quantity, totalOrderPrice }
           );
         }
-        const transactionAwaited = yield this.contract.functions.buy_nft((0, import_fuels11.bn)(this.listingId), (0, import_fuels11.bn)(this.quantity)).callParams({
-          forward: [(0, import_fuels11.bn)(totalOrderPrice), this.wallet.provider.getBaseAssetId()]
+        const transactionAwaited = yield this.contract.functions.buy_nft((0, import_fuels12.bn)(this.listingId), (0, import_fuels12.bn)(this.quantity)).callParams({
+          forward: [(0, import_fuels12.bn)(totalOrderPrice), this.wallet.provider.getBaseAssetId()]
         }).call();
         const finalTransaction = yield transactionAwaited.waitForResult();
         return { success: true, data: finalTransaction };
@@ -3044,7 +3043,7 @@ var BuyTokenService = class extends MarketplaceServices {
 };
 
 // src/services/marketplace/cancel-listing.ts
-var import_fuels12 = require("fuels");
+var import_fuels13 = require("fuels");
 var CancelListingService = class extends MarketplaceServices {
   constructor(contract) {
     super();
@@ -3062,7 +3061,7 @@ var CancelListingService = class extends MarketplaceServices {
     return __async(this, null, function* () {
       checkArguments([this.contract, this.listingId], "properties");
       try {
-        const transactionAwaited = yield this.contract.functions.cancel_listing((0, import_fuels12.bn)(this.listingId)).call();
+        const transactionAwaited = yield this.contract.functions.cancel_listing((0, import_fuels13.bn)(this.listingId)).call();
         const finalTransaction = yield transactionAwaited.waitForResult();
         return { success: true, data: finalTransaction };
       } catch (error) {
@@ -3074,7 +3073,7 @@ var CancelListingService = class extends MarketplaceServices {
 };
 
 // src/services/marketplace/list-token.ts
-var import_fuels13 = require("fuels");
+var import_fuels14 = require("fuels");
 var ListTokenService = class extends MarketplaceServices {
   constructor(contract) {
     super();
@@ -3110,12 +3109,12 @@ var ListTokenService = class extends MarketplaceServices {
         };
         const transactionAwaited = yield this.contract.functions.list_nft(
           contractIdInput,
-          (0, import_fuels13.bn)(this.price * 10 ** 9),
+          (0, import_fuels14.bn)(this.price * 10 ** 9),
           this.subId,
-          (0, import_fuels13.bn)(this.amount),
+          (0, import_fuels14.bn)(this.amount),
           this.tokenStandard
         ).callParams({
-          forward: [(0, import_fuels13.bn)(this.amount), this.assetId]
+          forward: [(0, import_fuels14.bn)(this.amount), this.assetId]
         }).call();
         const finalTransaction = yield transactionAwaited.waitForResult();
         if (!finalTransaction.transactionId) return null;
@@ -3129,7 +3128,7 @@ var ListTokenService = class extends MarketplaceServices {
 };
 
 // src/services/marketplace/modify-listing.ts
-var import_fuels14 = require("fuels");
+var import_fuels15 = require("fuels");
 var ModifyListingService = class extends MarketplaceServices {
   constructor(contract) {
     super();
@@ -3154,13 +3153,13 @@ var ModifyListingService = class extends MarketplaceServices {
       checkArguments([this.contract, this.listingId, this.newPrice, this.quantityToAdd], "properties");
       try {
         const contractCall = this.contract.functions.modify_listing(
-          (0, import_fuels14.bn)(this.listingId),
-          (0, import_fuels14.bn)(this.newPrice * 10 ** 9),
-          (0, import_fuels14.bn)(this.quantityToAdd)
+          (0, import_fuels15.bn)(this.listingId),
+          (0, import_fuels15.bn)(this.newPrice * 10 ** 9),
+          (0, import_fuels15.bn)(this.quantityToAdd)
         );
         if (this.quantityToAdd > 0 && this.assetId) {
           contractCall.callParams({
-            forward: [(0, import_fuels14.bn)(this.quantityToAdd), this.assetId]
+            forward: [(0, import_fuels15.bn)(this.quantityToAdd), this.assetId]
           });
         }
         const transactionAwaited = yield contractCall.call();

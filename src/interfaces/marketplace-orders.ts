@@ -2,7 +2,7 @@ export interface SubgraphListingData {
   id: string;
   status: 'ACTIVE' | 'INACTIVE';
   nftAddress: `0x${string}`;
-  nftType: 'NFT' | 'SFT';
+  nftType: 'NFT' | 'SEMI_FT';
   tokenId: `0x${string}`;
   asset_id: `0x${string}`;
   quantity: string;
@@ -57,7 +57,12 @@ export interface TokensInCollection {
   contractSymbol: string;
 }
 
-export interface NftDetails extends MarketplaceListings {
+export interface OmittedMarketplaceListings
+  extends Omit<MarketplaceListings, 'tokenName' | 'tokenImage' | 'tokenAssetMedia'> {}
+export interface NftMetadata {
+  tokenName: string;
+  tokenImage: string;
+  tokenAssetMedia: string;
   description: string;
 }
 
@@ -70,4 +75,9 @@ export interface ListingMetadata {
 
 export interface CollectionMetadata {
   image: string;
+}
+
+export interface NftDetails {
+  listingData: OmittedMarketplaceListings[];
+  nftMetadata: NftMetadata;
 }

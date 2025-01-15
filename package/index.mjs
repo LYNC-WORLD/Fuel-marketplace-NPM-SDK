@@ -2887,6 +2887,13 @@ var useListings = ({ network, limit }) => {
 
 // src/hooks/use-nft.ts
 import { useCallback as useCallback4, useEffect as useEffect4, useState as useState4 } from "react";
+import { getMintedAssetId as getMintedAssetId3 } from "fuels";
+var placeholderMetadata = {
+  tokenName: "",
+  tokenImage: "",
+  tokenAssetMedia: "",
+  description: ""
+};
 var useNft = ({
   network,
   limit,
@@ -2895,56 +2902,48 @@ var useNft = ({
   tokenId
 }) => {
   const [fetching, setFetching] = useState4(true);
-  const [data, setData] = useState4([]);
+  const [data, setData] = useState4({
+    listingData: [],
+    nftMetadata: placeholderMetadata
+  });
   const [error, setError] = useState4(null);
   const fetchData = useCallback4(() => __async(void 0, null, function* () {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     if (!contractAddress || !nftStandard || !tokenId) return;
+    const mintedAssetId = getMintedAssetId3(contractAddress, tokenId);
+    const metadata = placeholderMetadata;
+    const meteDataClient = new NftMetadataClient(network);
+    const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
+    const listingMetadata = yield metaDataClientWithProvider.setContract(contractAddress, nftStandard).getMetadata(mintedAssetId);
+    if (listingMetadata.success) {
+      metadata.description = (_b = (_a = listingMetadata.data) == null ? void 0 : _a.description) != null ? _b : "";
+      metadata.tokenName = (_d = (_c = listingMetadata.data) == null ? void 0 : _c.name) != null ? _d : "";
+      metadata.tokenImage = (_f = (_e = listingMetadata.data) == null ? void 0 : _e.image) != null ? _f : "";
+      metadata.tokenAssetMedia = (_h = (_g = listingMetadata.data) == null ? void 0 : _g.assetMedia) != null ? _h : "";
+    }
     const response = yield fetchNft(network, contractAddress, nftStandard, tokenId, limit != null ? limit : 100);
     if (!response.success) {
       setError(response.error);
-      setData([]);
+      setData({
+        listingData: [],
+        nftMetadata: metadata
+      });
       setFetching(false);
       return;
     }
     const listingData = response.data;
-    const meteDataClient = new NftMetadataClient(network);
-    const metaDataClientWithProvider = yield meteDataClient.useProvider("FuelProvider" /* FuelProvider */);
-    const formattedData = listingData.map(
-      (d) => ({
-        listingId: Number(d.id),
-        isActive: d.status === "ACTIVE",
-        nftAddress: d.nftAddress,
-        tokenStandard: d.nftType,
-        tokenId: d.tokenId,
-        assetId: d.asset_id,
-        tokenQuantity: parseInt(d.quantity),
-        pricePerItem: getFormattedPrice(d.pricePerItem),
-        sellerAddress: d.seller,
-        tokenName: "",
-        tokenImage: "",
-        tokenAssetMedia: "",
-        description: ""
-      })
-    );
-    const fetchMetadata = (d) => {
-      return metaDataClientWithProvider.setContract(d.nftAddress, d.tokenStandard).getMetadata(d.assetId);
-    };
-    const listingMetadataPromises = yield Promise.allSettled(formattedData.map(fetchMetadata));
-    const listingsWithMetadata = listingMetadataPromises.map((p, i) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h;
-      const listing = formattedData[i];
-      if (p.status === "fulfilled") {
-        const metadata = p.value;
-        if (metadata.success) {
-          listing.tokenName = (_b = (_a = metadata.data) == null ? void 0 : _a.name) != null ? _b : "";
-          listing.tokenImage = (_d = (_c = metadata.data) == null ? void 0 : _c.image) != null ? _d : "";
-          listing.tokenAssetMedia = (_f = (_e = metadata.data) == null ? void 0 : _e.assetMedia) != null ? _f : "";
-          listing.description = (_h = (_g = metadata.data) == null ? void 0 : _g.description) != null ? _h : "";
-        }
-      }
-      return listing;
-    });
-    setData(listingsWithMetadata);
+    const formattedData = listingData.map((d) => ({
+      listingId: Number(d.id),
+      isActive: d.status === "ACTIVE",
+      nftAddress: d.nftAddress,
+      tokenStandard: d.nftType,
+      tokenId: d.tokenId,
+      assetId: d.asset_id,
+      tokenQuantity: parseInt(d.quantity),
+      pricePerItem: getFormattedPrice(d.pricePerItem),
+      sellerAddress: d.seller
+    }));
+    setData({ listingData: formattedData, nftMetadata: metadata });
     setError(null);
     setFetching(false);
   }), [network, contractAddress, nftStandard, tokenId, limit]);

@@ -146,11 +146,19 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
    });
    ```
 
-   - Returns - `{ fetching: boolean, data: NftDetails[], error: unknown }`
+   - Returns - `{ fetching: boolean, data: NftDetails, error: unknown }`
    - Types -
 
    ```typescript
    interface NftDetails {
+     listingData: OmittedMarketplaceListings[];
+     nftMetadata: NftMetadata;
+   }
+
+   interface OmittedMarketplaceListings
+     extends Omit<MarketplaceListings, 'tokenName' | 'tokenImage' | 'tokenAssetMedia'> {}
+
+   interface MarketplaceListings {
      listingId: number;
      isActive: boolean;
      nftAddress: `0x${string}`;
@@ -160,6 +168,12 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
      tokenQuantity: number;
      pricePerItem: string;
      sellerAddress: `0x${string}`;
+     tokenName: string;
+     tokenImage: string;
+     tokenAssetMedia: string;
+   }
+
+   interface NftMetadata {
      tokenName: string;
      tokenImage: string;
      tokenAssetMedia: string;
@@ -422,7 +436,18 @@ interface MarketplaceCollections {
   bannerImage: string;
 }
 
-interface NftDetails extends MarketplaceListings {
+interface NftDetails {
+  listingData: OmittedMarketplaceListings[];
+  nftMetadata: NftMetadata;
+}
+
+interface OmittedMarketplaceListings
+  extends Omit<MarketplaceListings, 'tokenName' | 'tokenImage' | 'tokenAssetMedia'> {}
+
+interface NftMetadata {
+  tokenName: string;
+  tokenImage: string;
+  tokenAssetMedia: string;
   description: string;
 }
 

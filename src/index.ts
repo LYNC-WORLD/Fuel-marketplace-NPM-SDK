@@ -5,6 +5,8 @@ import {
   MarketplaceListings,
   MarketplaceCollections,
   NftDetails,
+  NftMetadata,
+  OmittedMarketplaceListings,
   TokensInCollection,
 } from '@/interfaces';
 import { MarketplaceClient } from '@/services/marketplace';
@@ -28,6 +30,8 @@ export {
   type MarketplaceListings,
   type MarketplaceCollections,
   type NftDetails,
+  type NftMetadata,
+  type OmittedMarketplaceListings,
   type TokensInCollection,
 
   /* -- Services -- */
