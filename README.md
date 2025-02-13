@@ -4,6 +4,11 @@ Introducing marketplace NPM SDK on Fuel blockchain. Powered by LYNC, it allows a
 
 > Note - The current SDK version supports creating and trading tokens only on **Fuel testnet**.
 
+- [View documentation](https://docs.lync.world/fuel/fuel-marketplace-npm-sdk)
+- [Package link on npmjs](https://www.npmjs.com/package/@lyncworld/fuel-marketplace)
+- [View code on GitHub](https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK)
+- [View example application code on GitHub](https://github.com/LYNC-WORLD/Fuel-Marketplace-Frontend)
+
 ## Prerequisites
 
 Before you begin integrating Fuel marketplace SDK, make sure you have the following prerequisites:

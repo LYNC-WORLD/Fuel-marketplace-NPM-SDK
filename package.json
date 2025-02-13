@@ -1,7 +1,7 @@
 {
   "name": "@lyncworld/fuel-marketplace",
   "private": false,
-  "version": "0.0.0-beta.4",
+  "version": "1.0.1",
   "author": {
     "name": "LYNC WORLD",
     "url": "https://www.lync.world"
@@ -25,7 +25,7 @@
     "type": "git",
     "url": "https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK.git"
   },
-  "homepage": "https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK.git/README.md",
+  "homepage": "https://docs.lync.world/fuel/fuel-marketplace-npm-sdk",
   "scripts": {
     "build": "tsup"
   },
