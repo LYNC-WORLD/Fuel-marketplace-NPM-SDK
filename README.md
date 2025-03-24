@@ -6,8 +6,8 @@ Introducing marketplace NPM SDK on Fuel blockchain. Powered by LYNC, it allows a
 
 - [View documentation](https://docs.lync.world/fuel/fuel-marketplace-npm-sdk)
 - [Package link on npmjs](https://www.npmjs.com/package/@lyncworld/fuel-marketplace)
-- [View code on GitHub](https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK)
-- [View example application codes on GitHub](./examples/)
+- [View code on GitHub](https://github.com/LYNC-WORLD/Fuel-marketplace-NPM-SDK/tree/main/package)
+- [View example application codes on GitHub](https://github.com/LYNC-WORLD/Fuel-marketplace-NPM-SDK/tree/main/examples)
 
 ## Prerequisites
 
