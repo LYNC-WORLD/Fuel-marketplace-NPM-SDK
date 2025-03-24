@@ -11,7 +11,7 @@
   "dependencies": {
     "@fuels/connectors": "^0.36.1",
     "@fuels/react": "^0.36.1",
-    "@lyncworld/fuel-marketplace": "^1.0.1",
+    "@lyncworld/fuel-marketplace": "^1.0.2",
     "@moralisweb3/common-evm-utils": "^2.18.1",
     "@moralisweb3/next": "^2.18.1",
     "@radix-ui/react-tooltip": "^1.1.3",
