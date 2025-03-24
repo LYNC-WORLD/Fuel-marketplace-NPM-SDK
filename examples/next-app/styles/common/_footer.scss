@@ -1,0 +1,187 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.footer-container {
+  background-color: hsl(var(--color-black));
+  padding-block-start: 4rem;
+  position: relative;
+  z-index: 1;
+
+  @media #{$max-lg} {
+    padding-block-start: 3rem;
+  }
+
+  @media #{$max-md} {
+    padding-block-start: 2rem;
+  }
+
+  @media #{$max-xs} {
+    padding-block-start: 1.5rem;
+  }
+
+  .footer {
+    padding-inline-start: 4.5rem;
+    padding-inline-end: 4.5rem;
+    padding-block-end: 4rem;
+
+    @media #{$max-lg} {
+      padding-inline-start: 3rem;
+      padding-inline-end: 3rem;
+      padding-block-end: 3rem;
+    }
+
+    @media #{$max-md} {
+      padding-inline-start: 2.5rem;
+      padding-inline-end: 2.5rem;
+      padding-block-end: 2rem;
+    }
+
+    @media #{$max-xs} {
+      padding-inline-start: 1.5rem;
+      padding-inline-end: 1.5rem;
+      padding-block-end: 1.5rem;
+    }
+
+    .footer-common {
+      display: flex;
+      flex-direction: column;
+      gap: rem(10);
+
+      .heading {
+        font-size: calc(var(--fs-sm) * 1.1);
+        letter-spacing: 0.075em;
+        color: hsl(var(--color-fuel-green));
+      }
+
+      .items-list {
+        gap: rem(10);
+        margin-top: rem(12);
+
+        .list-items {
+          font-size: var(--fs-sm);
+          cursor: pointer;
+          letter-spacing: 0.06em;
+          color: hsl(var(--color-white) / 0.7);
+          transition: color 100ms ease-in-out;
+
+          &:hover {
+            color: hsl(var(--color-fuel-green));
+            transition: color 100ms ease-in-out;
+          }
+        }
+      }
+    }
+
+    .footer-1 {
+      flex-basis: 34%;
+
+      .icons-container {
+        gap: rem(32);
+
+        .icons {
+          width: rem(22.5);
+        }
+      }
+
+      .lets-connect-text {
+        font-size: var(--fs-sm);
+        letter-spacing: 0.085em;
+        margin-top: rem(32);
+      }
+
+      .email-text {
+        color: hsl(var(--color-white) / 0.6);
+        font-size: var(--fs-sm);
+        letter-spacing: 0.07em;
+        margin-top: rem(-2.5);
+
+        .email-link {
+          text-decoration: underline;
+          color: hsl(var(--color-white));
+          transition: color 100ms ease-in-out;
+
+          &:hover {
+            color: hsl(var(--color-fuel-green));
+            transition: color 100ms ease-in-out;
+          }
+        }
+      }
+    }
+
+    .footer-2 {
+      flex-basis: 16%;
+    }
+
+    .footer-3 {
+      flex-basis: 16%;
+    }
+
+    .footer-4 {
+      flex-basis: 34%;
+
+      .subscription-form {
+        gap: 0;
+        border: 1px solid hsl(var(--color-fuel-green));
+        border-radius: 20px;
+        overflow: hidden;
+        margin-top: rem(4);
+
+        .email-input {
+          color: hsl(var(--color-black));
+          font-size: var(--fs-sm);
+          background-color: hsl(var(--color-black));
+          padding-inline: em(15);
+          padding-block: em(8);
+        }
+
+        .subscribe-btn {
+          padding-inline: rem(20);
+          font-size: rem(15);
+          font-weight: var(--fw-bold);
+          color: hsl(var(--color-black));
+          background: hsl(var(--color-fuel-green));
+        }
+      }
+    }
+  }
+
+  .copyright-text {
+    width: calc(100% - rem(30));
+    text-align: center;
+    border-top: 1px solid hsl(var(--color-white) / 0.2);
+    padding-block-start: rem(20);
+    padding-block-end: rem(27);
+    color: hsl(var(--color-white) / 0.6);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.06em;
+  }
+}
+
+@media #{$max-lgNew} {
+  .footer-container .footer .footer-2,
+  .footer-container .footer .footer-3 {
+    flex-basis: 30%;
+  }
+
+  .footer-container .footer .footer-4 {
+    flex-basis: 40%;
+  }
+}
+
+@media #{$max-md} {
+  .footer-container .footer .footer-2,
+  .footer-container .footer .footer-3,
+  .footer-container .footer .footer-4 {
+    flex-basis: 50%;
+  }
+}
+
+@media #{$max-xs} {
+  .footer-container .footer .footer-2,
+  .footer-container .footer .footer-3 {
+    flex-basis: 100%;
+  }
+  .footer-container .footer .footer-4 {
+    flex-basis: 80%;
+  }
+}

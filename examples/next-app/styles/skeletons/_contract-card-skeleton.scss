@@ -1,0 +1,50 @@
+@use "../utils/functions" as *;
+@use "../utils//breakpoints" as *;
+
+.activities-data.skeleton {
+  border: 0 !important;
+  --elements-border-radius: 2px;
+
+  .counter {
+    background-color: hsl(var(--skeleton-elements) / 0.35);
+    height: calc(var(--fs-sm) * var(--line-height-base));
+    width: 2ch;
+    border-radius: var(--elements-border-radius);
+  }
+
+  .data-avatar {
+    background-color: hsl(var(--skeleton-elements) / 0.35);
+  }
+
+  .data-name {
+    .name {
+      background-color: hsl(var(--skeleton-elements) / 0.35);
+      height: calc(var(--fs-xl) * var(--line-height-base));
+      border-radius: var(--elements-border-radius);
+
+      &.collectors {
+        height: calc(var(--fs-lg) * var(--line-height-base));
+      }
+    }
+
+    .at-text {
+      display: inline-block;
+      margin-top: rem(6);
+      background-color: hsl(var(--skeleton-elements) / 0.35);
+      height: calc(var(--fs-sm) * var(--line-height-base));
+      width: 25ch;
+      border-radius: var(--elements-border-radius);
+    }
+  }
+
+  .data-amount {
+    background-color: hsl(var(--skeleton-elements) / 0.35);
+    height: calc(calc((var(--fs-sm) + var(--fs-base)) / 2) * var(--line-height-base));
+    width: 15ch;
+    border-radius: var(--elements-border-radius);
+  }
+
+  * {
+    animation: skeleton-loading 1.25s linear infinite alternate;
+  }
+}

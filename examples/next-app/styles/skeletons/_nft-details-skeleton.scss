@@ -1,0 +1,209 @@
+@use "../utils/functions" as *;
+@use "../utils//breakpoints" as *;
+
+.nft-details.skeleton {
+    --elements-border-radius: 2px;
+
+    .container {
+        .image-container {
+            border-radius: 5px;
+            border: 1px solid hsl(var(--color-border-line) / 0.5) !important;
+
+            .nft-image {
+                .heart-icon {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                }
+            }
+
+            .description-container {
+                width: 100%;
+                .description-header {
+                    .icon {
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        aspect-ratio: 5/4;
+                        height: calc((var(--fs-base)) * var(--line-height-base));
+                        border-radius: var(--elements-border-radius);
+                    }
+
+                    .text {
+                        height: calc((var(--fs-base)) * var(--line-height-base));
+                        width: 15ch;
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        border-radius: var(--elements-border-radius);
+                    }
+                }
+
+                .content {
+                    .lines {
+                        display: inline-block;
+                        height: calc((var(--fs-xs)) * 1.3);
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        border-radius: var(--elements-border-radius);
+
+                        &:last-of-type {
+                            width: 60%;
+                        }
+                    }
+                }
+            }
+        }
+
+        .details-container {
+            width: 100%;
+            .nft-information-container {
+                .collection-name {
+                    > * {
+                        display: inline-block;
+                        height: calc((var(--fs-xs)) * var(--line-height-base));
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        border-radius: var(--elements-border-radius);
+                        width: 9ch;
+                    }
+
+                    .nft-type {
+                        margin-left: 5px;
+                    }
+                }
+
+                .art-name {
+                    height: calc(var(--fs-3xl) * var(--line-height-base));
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    border-radius: var(--elements-border-radius);
+                    max-width: 15ch;
+                }
+
+                .owner-name {
+                    display: inline-block;
+                    height: calc((var(--fs-xs)) * var(--line-height-base));
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    border-radius: var(--elements-border-radius);
+                    width: 20ch;
+                    margin-top: rem(4);
+                }
+
+                .sell-information-details {
+                    background: hsl(var(--skeleton-elements) / 0.2);
+                    border: 1px solid hsl(var(--color-border-line) / 0.2) !important;
+                    border-radius: var(--elements-border-radius);
+                    padding-block: rem(5);
+
+                    .icon {
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        width: rem(20);
+                    }
+
+                    .text {
+                        height: calc((var(--fs-xs)) * var(--line-height-base));
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        background-color: hsl(var(--skeleton-elements) / 0.35);
+                        border-radius: var(--elements-border-radius);
+                    }
+                }
+            }
+        }
+    }
+
+    * {
+        animation: skeleton-loading 1.25s linear infinite alternate;
+    }
+}
+
+.nft-user-interaction-panel {
+    height: rem(350);
+    background: hsl(var(--skeleton-elements) / 0.2);
+    border: 1px solid hsl(var(--color-border-line) / 0.2) !important;
+    border-radius: var(--elements-border-radius);
+    animation: skeleton-loading 1.25s linear infinite alternate;
+
+    .btns-container {
+        border-bottom: 1px solid hsl(var(--color-border-line) / 0.4) !important;
+        height: rem(43);
+
+        .btns {
+            flex: 1;
+            height: 100%;
+
+            &:first-of-type {
+                border-right: 1px solid hsl(var(--color-border-line) / 0.4) !important;
+            }
+
+            .text {
+                height: calc((var(--fs-lg)) * var(--line-height-base));
+                background-color: hsl(var(--skeleton-elements) / 0.35);
+                border-radius: var(--elements-border-radius);
+                width: 17ch;
+            }
+        }
+    }
+
+    .interaction-form {
+        gap: rem(12);
+        height: calc(100% - 2.5rem);
+        padding: 0.625rem 1.5rem;
+
+        .form-data-group {
+            .label {
+                display: block;
+                height: calc(rem(8) * var(--line-height-base));
+                background-color: hsl(var(--skeleton-elements) / 0.35);
+                border-radius: var(--elements-border-radius);
+                width: 10ch;
+            }
+
+            .input {
+                display: block;
+                height: rem(37);
+                margin-top: 4px;
+                background-color: hsl(var(--skeleton-elements) / 0.35);
+                border-radius: var(--elements-border-radius);
+                width: 100%;
+
+                &.last-of-type {
+                    width: rem(200);
+                }
+            }
+        }
+
+        .submit-btn {
+            height: rem(37);
+            background-color: hsl(var(--skeleton-elements) / 0.2);
+            border-radius: var(--elements-border-radius);
+            width: rem(160);
+            margin-top: auto;
+            margin-bottom: rem(30);
+        }
+    }
+
+    * {
+        animation: skeleton-loading 1.25s linear infinite alternate;
+    }
+}
+
+.tables {
+    height: rem(52);
+    background: hsl(var(--skeleton-elements) / 0.2);
+    border: 1px solid hsl(var(--color-border-line) / 0.2) !important;
+    border-radius: var(--elements-border-radius);
+    padding: 0 1.5rem;
+    animation: skeleton-loading 1.25s linear infinite alternate;
+
+    .text {
+        display: block;
+        height: calc((var(--fs-lg)) * var(--line-height-base));
+        background-color: hsl(var(--skeleton-elements) / 0.35);
+        border-radius: var(--elements-border-radius);
+        width: 25ch;
+    }
+
+    .icon {
+        display: block;
+        aspect-ratio: 1;
+        width: rem(14);
+        background-color: hsl(var(--skeleton-elements) / 0.35);
+        border-radius: var(--elements-border-radius);
+    }
+
+    * {
+        animation: skeleton-loading 1.25s linear infinite alternate;
+    }
+}

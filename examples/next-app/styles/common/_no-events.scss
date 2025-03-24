@@ -1,0 +1,26 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.no-events {
+  background: var(--gradient-three);
+  border: 1px solid hsl(var(--color-fuel-green) / 0.5);
+  height: rem(280);
+  gap: rem(10);
+
+  .ghost-icon {
+    svg {
+      width: rem(28);
+
+      path {
+        fill: hsl(var(--color-fuel-green));
+      }
+    }
+  }
+
+  .message {
+    text-align: center;
+    font-size: var(--fs-xl);
+    letter-spacing: 0.03em;
+    color: hsl(var(--color-fuel-green));
+  }
+}

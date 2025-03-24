@@ -1,0 +1,64 @@
+:root {
+  --fw-thin: 100;
+  --fw-extralight: 200;
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-extrabold: 800;
+  --fw-black: 900;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.25rem;
+  --fs-2xl: 1.5rem;
+  --fs-3xl: 1.875rem;
+  --fs-4xl: 2.25rem;
+  --fs-5xl: 3rem;
+  --fs-6xl: 3.75rem;
+  --fs-7xl: 4.5rem;
+  --fs-8xl: 6rem;
+
+  --color-white: 0 0% 100%; /* --[#FFFFFF]-- */
+  --color-black: 0 0% 0%; /* --[#000000]-- */
+  --color-fuel-green: 154 100% 48%; /* --[#00F58C]-- */
+  --color-bg-primary: 0 0% 6%; /* --[#101010]-- */
+  --color-bg-secondary: 0 0% 4%; /* --[#090909]-- */
+  --color-bg-tertiary: 0 0% 11%; /* --[#1C1C1C]-- */
+  --color-dull-primary: 0 0% 69%; /* --[#AFAFAF]-- */
+  --color-dull-secondary: 0 0% 67%; /* --[#AAAAAA]-- */
+  --color-slider-btn-bg: 0 0% 15%; /* --[#262626]-- */
+  --color-toast-msg: 0 0% 20%; /* --[#333333]-- */
+
+  --color-border-line: 0 0% 32%; /* --[#515151]-- */
+
+  --skeleton-bg: 0 0% 16%; /* --[#282828]-- */
+  --skeleton-elements: 0 0% 36%; /* --[#5C5C5C]-- */
+
+  --color-success: 108 62% 55%; /* --[#61D345]-- */
+  --color-error: 0 100% 65%; /* --[#FF4B4B]-- */
+  --color-warning: 47 100% 62%; /* --[#FFD43B]-- */
+  --color-info: 265 86% 47%; /* --[#6611DD]-- */
+
+  --blur-bg: rgba(9, 9, 9, 0.6);
+  --blur-filter: 10px;
+
+  --shadow-slider-btn: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  --shadow-blur: 0px 0px 4px hsl(var(--color-black) / 0.25);
+  --shadow-toaster: 0 3px 9px rgb(0 0 0 / 10%), 0 3px 3px rgb(0 0 0 / 10%);
+
+  --gradient-one: linear-gradient(360deg, rgba(9, 9, 10, 0.9) 0%, rgba(9, 9, 10, 0.05) 95.49%);
+  --gradient-two: linear-gradient(180deg, rgb(117, 117, 117, 0.5) 0%, rgba(64, 64, 64, 0.25) 100%);
+  --gradient-three: linear-gradient(0.31deg, rgba(0, 0, 0, 0.608) 0.34%, rgba(0, 0, 0, 0.32) 99.81%);
+
+  --padding-app-inline: 4.5rem;
+  --padding-app-block: 4rem;
+  --padding-section-block: 3.5rem;
+
+  
+
+  --line-height-base: 1.35;
+}

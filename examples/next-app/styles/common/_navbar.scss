@@ -1,0 +1,124 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.header {
+  padding-block: rem(20);
+  gap: rem(128);
+  top: 0;
+  background: hsl(var(--color-bg-primary));
+  backdrop-filter: blur(20px);
+
+  .container {
+    flex: 1;
+    .search-box {
+      background-color: hsl(var(--color-black));
+      width: rem(350);
+      padding-inline: rem(16);
+      border-radius: 20px;
+      border: 1px solid hsl(var(--color-fuel-green) / 0.5);
+
+      .search-icon {
+        width: rem(16);
+      }
+
+      .search-input {
+        flex: 1;
+        font-size: var(--fs-sm);
+        padding-block: rem(7.5);
+
+        &::placeholder {
+          font-size: calc((var(--fs-xs) + var(--fs-sm)) / 2);
+        }
+      }
+    }
+
+    .search-results-container {
+      border-radius: 5px;
+      top: calc(100% + 0.25rem);
+      overflow: hidden;
+      gap: 0;
+      background: hsl(var(--color-bg-secondary));
+      border: 1px solid hsl(var(--color-fuel-green) / 0.25);
+    }
+
+    .navigation {
+      gap: rem(40);
+
+      .navigation-list {
+        gap: inherit;
+
+        .navigation-list-items {
+          font-size: var(--fs-sm);
+          color: hsl(var(--color-dull-secondary));
+          cursor: pointer;
+          transition: color 150ms linear;
+
+          &.explore-btn {
+            gap: rem(8);
+
+            svg {
+              width: rem(10);
+
+              path {
+                stroke: hsl(var(--color-dull-secondary));
+              }
+            }
+          }
+
+          &:hover {
+            color: hsl(var(--color-white));
+            transition: color 150ms linear;
+          }
+        }
+      }
+
+      .notification {
+        width: rem(15);
+
+        svg path {
+          transition: fill 150ms linear;
+        }
+
+        &:hover {
+          svg path {
+            fill: white;
+            transition: fill 150ms linear;
+          }
+        }
+      }
+    }
+
+    .wallet-address-container {
+      .profile-link {
+        left: 0;
+        transform: translateX(-50%);
+        z-index: 1;
+
+        .avatar {
+          width: rem(35);
+          position: relative;
+          border: 1px solid hsl(var(--color-slider-btn-bg));
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+          }
+        }
+      }
+
+      .wallet-address {
+        cursor: pointer;
+        background-color: hsl(var(--color-bg-secondary));
+        font-size: rem(11);
+        letter-spacing: 0.1em;
+        padding-block: em(6);
+        padding-inline-start: calc(em(10) + (rem(35) / 2));
+        padding-inline-end: em(12);
+        border-radius: 3px;
+      }
+    }
+  }
+}

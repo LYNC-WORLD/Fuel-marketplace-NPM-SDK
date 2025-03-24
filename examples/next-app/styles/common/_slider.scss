@@ -1,0 +1,46 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.slider-container {
+    isolation: isolate;
+    display: block;
+
+    .slider-items-container {
+        display: flex;
+        overflow-x: scroll;
+        gap: rem(20);
+        -ms-overflow-style: none;
+        scrollbar-width: 0;
+        z-index: -1;
+        pointer-events: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            pointer-events: auto;
+        }
+    }
+
+    .slider-btn {
+        top: 50%;
+        background-color: hsl(var(--color-slider-btn-bg));
+        box-shadow: var(--shadow-slider-btn);
+        width: rem(36);
+
+        svg {
+            width: rem(10);
+        }
+
+        &.prev {
+            left: 0;
+            transform: translateX(-50%) translateY(-50%) rotate(180deg);
+        }
+
+        &.next {
+            right: 0;
+            transform: translateX(50%) translateY(-50%);
+        }
+    }
+}

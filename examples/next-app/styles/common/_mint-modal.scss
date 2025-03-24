@@ -1,0 +1,179 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+
+  .modal {
+    background-color: #000000;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 450px;
+    color: white;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+    .modal-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: rem(20);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .modal-content {
+      padding: 20px;
+
+      .status-list {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+
+        .status-item {
+          display: flex;
+          gap: 20px;
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 15px;
+          font-weight: 500;
+
+          .status-item-text p {
+            margin-top: 6px;
+            font-size: 13px;
+            color: #6d6d6d;
+          }
+        }
+
+        .status-item span {
+          font-size: 18px;
+        }
+
+        .modal-alignitem {
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+
+    .reject-modal {
+      max-width: 450px;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      flex-direction: column;
+
+      .reject-modal-body {
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: column;
+      }
+
+      .reject-modal-body h2 {
+        font-size: 20px;
+        text-align: center;
+
+        margin-top: 20px;
+        @media #{$max-md} {
+          font-size: 19px;
+          text-align: center;
+        }
+        @media #{$max-xs} {
+          font-size: 18px;
+        }
+      }
+      .reject-modal-button-container {
+        width: 100%;
+        padding: 20px;
+        border-top: 1px solid #1d1d1c;
+      }
+      .reject-modal-button-container button {
+        width: 100%;
+        background-color: white;
+        color: #141414;
+        border-radius: 5px;
+        padding: 8px;
+      }
+    }
+  }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  width: 20px;
+  margin-top: 4px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.check-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.uncheck-circle {
+  width: 18px;
+  margin-right: 2px;
+
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+}
+
+.check-circle::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 5px;
+  border-left: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: rotate(-45deg);
+  top: 6px;
+  left: 5px;
+}
+
+.mint-button {
+  background-color: #22c55e;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.mint-button:hover {
+  background-color: #16a34a;
+}

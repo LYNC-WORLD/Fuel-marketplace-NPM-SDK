@@ -1,0 +1,36 @@
+/*--- Configs ---*/
+@forward "./configs/root";
+@forward "./configs/resets";
+
+/*--- Utility Classes ---*/
+@forward "./utils/utility-classes";
+
+/*--- Common Components ---*/
+@forward "./common/navbar";
+@forward "./common/navbar-new";
+@forward "./common/create-nft";
+@forward "./common/display-grid";
+@forward "./common/slider";
+@forward "./common/no-events";
+@forward "./common/search-results";
+@forward "./common/sidebar";
+@forward "./common/footer";
+@forward "./common/modal";
+@forward "./common/mint-modal";
+@forward "./common/toaster";
+@forward "./common/footer";
+
+/*--- Pages ---*/
+@forward "./pages/collection";
+@forward "./pages/home";
+@forward "./pages/listed-collection";
+@forward "./pages/nft-details";
+@forward "./pages/owned-nfts";
+
+/*--- Skeletons ---*/
+@forward "./skeletons/common-card-skeleton";
+@forward "./skeletons/contract-card-skeleton";
+@forward "./skeletons/contract-details-card-skeleton";
+@forward "./skeletons/listing-card-skeleton";
+@forward "./skeletons/nft-details-skeleton";
+@forward "./skeletons/all-collection-skeleton";

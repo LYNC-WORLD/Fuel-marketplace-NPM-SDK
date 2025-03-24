@@ -1,0 +1,60 @@
+@use "../utils/functions" as *;
+@use "../utils//breakpoints" as *;
+
+.collection.skeleton {
+  --elements-border-radius: 2px;
+
+  .banner-container {
+    background-color: hsl(var(--skeleton-elements) / 0.2);
+  }
+
+  .collection-profile-container {
+    .collection-profile-img {
+      background-color: hsl(var(--skeleton-elements) / 0.35);
+      border: 1px solid hsl(var(--color-border-line) / 0.2) !important;
+    }
+
+    .collection-name {
+      height: calc((var(--fs-3xl)) * var(--line-height-base));
+      width: 20ch;
+      border-radius: var(--elements-border-radius);
+      background-color: hsl(var(--skeleton-elements) / 0.35);
+    }
+
+    .collection-address-container {
+      > * {
+        height: calc(rem(10) * var(--line-height-base));
+        width: 9ch;
+        border-radius: var(--elements-border-radius);
+        background-color: hsl(var(--skeleton-elements) / 0.35);
+      }
+    }
+
+    .collection-description {
+      height: calc(rem(11) * var(--line-height-base));
+      width: 60ch;
+      border-radius: var(--elements-border-radius);
+      background-color: hsl(var(--skeleton-elements) / 0.35);
+      margin-bottom: rem(3);
+    }
+  }
+
+  .collection-option-list-container {
+    background-color: transparent;
+
+    .collection-options-list {
+      border-top: 1px solid hsl(var(--color-border-line) / 0.2) !important;
+      border-bottom: 1px solid hsl(var(--color-border-line) / 0.2) !important;
+      .option-list-items {
+        height: calc(var(--fs-xs) * var(--line-height-base));
+        width: 14ch;
+        border-radius: var(--elements-border-radius);
+        background-color: hsl(var(--skeleton-elements) / 0.35);
+      }
+    }
+  }
+
+  * {
+    animation: skeleton-loading 1.25s linear infinite alternate;
+  }
+}

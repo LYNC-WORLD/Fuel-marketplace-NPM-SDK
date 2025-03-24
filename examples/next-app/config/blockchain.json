@@ -1,0 +1,6 @@
+{
+  "fuel_testnet": {
+    "marketPlaceAddress": "0xb05032967c123dc561f7cef1ed9c079a4833d658ce9d74885e3ec3ec94cdcde7",
+    "publicRpc": "https://testnet.fuel.network/v1/graphql"
+  }
+}

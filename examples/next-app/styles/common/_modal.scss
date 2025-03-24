@@ -1,0 +1,31 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.modal {
+    z-index: 9999;
+    max-height: 100vh;
+    backdrop-filter: blur(4px);
+
+    .modal-card {
+        width: min(90%, rem(620));
+        backdrop-filter: blur(10px);
+        background-color: hsl(var(--color-black) / 0.6);
+        aspect-ratio: 5/3;
+        padding: rem(24);
+        border: 1px solid hsl(var(--color-border-line) / 0.35);
+        border-radius: 5px;
+        z-index: inherit;
+
+        .modal-close-btn {
+            right: rem(18);
+            top: rem(18);
+
+            svg {
+                width: rem(15);
+                line {
+                    stroke: hsl(var(--color-white) / 0.5);
+                }
+            }
+        }
+    }
+}

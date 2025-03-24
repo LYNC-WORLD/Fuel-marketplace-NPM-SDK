@@ -1,0 +1,405 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.create-nft-main {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: 99999;
+    backdrop-filter: blur(1px);
+
+    .container {
+        width: 46.875rem;
+        height: 29rem;
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        border-radius: 20px;
+        overflow: hidden;
+
+        .create-options {
+            grid-column: span 1;
+            background-color: white;
+            padding-block: 2rem;
+            padding-inline: 1rem;
+
+            .options-heading {
+                text-transform: uppercase;
+                color: #3c3c3c;
+                font-weight: 600;
+                font-size: 0.875rem;
+                padding-inline: 0.8rem;
+            }
+
+            .options-list {
+                color: hsl(var(--color-black) / 0.85);
+                letter-spacing: 0.02em;
+                font-weight: 600;
+                font-size: 0.875rem;
+                margin-top: 2rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5em;
+                justify-content: flex-start;
+                align-items: flex-start;
+
+                li {
+                    cursor: pointer;
+                    width: 100%;
+                    padding: 0.4rem 0.8rem;
+                    border-radius: 4px;
+                    transition: background-color 200ms linear;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5em;
+
+                    &:hover {
+                        background-color: #f1f1f1;
+                        transition: background-color 100ms linear;
+                    }
+
+                    &.active {
+                        background-color: #f1f1f1;
+                    }
+                }
+            }
+        }
+
+        .content-components {
+            height: 100%;
+            grid-column: 2 / span 3;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: flex-start;
+            color: white;
+            margin-top: auto;
+            padding-block: 0.25rem;
+
+            .content-heading {
+                font-size: 2rem;
+                font-weight: 700;
+            }
+
+            .content-info {
+                display: flex;
+                width: 100%;
+                justify-content: space-between;
+                align-items: center;
+                letter-spacing: 0.04em;
+                font-size: rem(15);
+
+                .info {
+                    max-width: 38ch;
+                }
+
+                .btn {
+                    width: max-content;
+                    padding-inline: 1em;
+                    padding-block: 0.5em;
+                    font-size: 1rem;
+                    font-weight: 600;
+                    border-radius: 2rem;
+                    background-color: hsl(var(--color-white));
+                    color: hsl(var(--color-black));
+                }
+            }
+        }
+
+        .create-nft {
+            background-image: url("../public/assets/nft-art.png"),
+                linear-gradient(121.11deg, #151515 0.54%, #000000 100%);
+            backdrop-filter: blur(12.5px);
+            background-position: center;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+
+            .nft-input-container {
+                width: 12rem;
+                aspect-ratio: 5/7;
+                background: linear-gradient(
+                    150.94deg,
+                    hsl(0, 0%, 0%, 0.75) 3.32%,
+                    rgba(0, 0, 0, 0) 98.95%
+                );
+                filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+                backdrop-filter: blur(8px);
+                border-radius: 10px;
+                overflow: hidden;
+                border: 1px solid hsl(0, 0%, 50%, 0.2);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+
+                &:not(:has(.image-container)) {
+                    &::before,
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        border-bottom: 1px solid white;
+                        width: rem(35);
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%);
+                    }
+
+                    &::before {
+                        transform: translate(-50%) rotate(90deg);
+                    }
+                }
+
+                .image-container {
+                    display: grid;
+                    place-items: center;
+                    width: 100%;
+                    height: 100%;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+
+                .image-input-zone {
+                    position: absolute;
+                    inset: 0;
+                }
+            }
+        }
+
+        .multiple-editions {
+            background: url("../public/assets/multiple-edition-bg.png"),
+                linear-gradient(121.11deg, #151515 0.54%, #000000 100%);
+            backdrop-filter: blur(12.5px);
+            background-position: center;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+
+            .cards-container {
+                display: block;
+                position: relative;
+                width: 12rem;
+                aspect-ratio: 5/7;
+
+                @for $i from -2 through 2 {
+                    &:nth-of-type(1) {
+                        .cards:nth-of-type(#{$i + 3}) {
+                            transform-origin: center;
+                            animation: card-animation-#{$i +
+                                3}
+                                2s
+                                cubic-bezier(0.05, 0.43, 0.25, 0.95)
+                                infinite;
+                        }
+                    }
+
+                    @keyframes card-animation-#{$i + 3} {
+                        0% {
+                            transform: rotate(0);
+                        }
+                        40% {
+                            transform: rotate(calc(4.25deg * #{$i}));
+                        }
+                        50% {
+                            transform: rotate(calc(4.25deg * #{$i}));
+                        }
+                        90% {
+                            transform: rotate(0);
+                        }
+                        100% {
+                            transform: rotate(0);
+                        }
+                    }
+                }
+
+                .cards {
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.7);
+                    backdrop-filter: blur(8px);
+                    border-radius: 10px;
+                    position: absolute;
+                    overflow: hidden;
+                    border: 1px solid hsl(0, 0%, 50%, 0.5);
+                    transform: none;
+                    transition: transform 750ms
+                        cubic-bezier(0.05, 0.43, 0.25, 0.95);
+
+                    @for $i from 1 through 7 {
+                        &:nth-of-type(#{$i + 1}) {
+                            z-index: -#{$i};
+                        }
+                    }
+
+                    .image-container {
+                        display: grid;
+                        place-content: center;
+                        width: 100%;
+                        height: 100%;
+
+                        img {
+                            width: 15.2rem;
+                            aspect-ratio: 5/7;
+                        }
+                    }
+                }
+            }
+        }
+
+        .launch-collections {
+            padding-inline: 0;
+            padding-block: 1rem;
+            background-image: linear-gradient(
+                121.11deg,
+                #151515 0.54%,
+                #000000 100%
+            );
+            position: relative;
+
+            .content-container {
+                position: absolute;
+                bottom: 2rem;
+                padding: 2rem;
+                z-index: 2;
+            }
+
+            .animation-display-container {
+                width: 100%;
+                z-index: 0;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                gap: 0.6rem;
+                max-width: rem(562.5);
+
+                .display-images-container {
+                    display: flex;
+                    align-items: center;
+                    width: max-content;
+                    justify-content: center;
+                    gap: 1rem;
+                    animation: train-animation 10s linear infinite alternate;
+
+                    &:nth-of-type(even) {
+                        transform: translateX(rem(-83));
+                        animation-direction: alternate-reverse;
+                    }
+
+                    .image-box {
+                        display: grid;
+                        place-items: center;
+                        aspect-ratio: 1;
+                        width: rem(148);
+                        border: 1px solid hsl(0, 0%, 50%, 0.5);
+                        border-radius: 20px;
+                        overflow: hidden;
+
+                        img {
+                            width: rem(148);
+                            aspect-ratio: 1;
+                        }
+                    }
+                }
+
+                @keyframes train-animation {
+                    from {
+                        transform: translateX(rem(-500));
+                    }
+                    to {
+                        transform: translateX(0);
+                    }
+                }
+            }
+
+            .gradient-container {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                z-index: 1;
+                background: linear-gradient(
+                    179.8deg,
+                    rgba(21, 21, 21, 0) 0.21%,
+                    #000000 91.91%
+                );
+            }
+
+            &:has(.gradient-container:hover) {
+                .display-images-container {
+                    animation-play-state: paused;
+                }
+            }
+        }
+
+        .launch-game {
+            background-image: url("../public/assets/metal-texture-with-screws.png"),
+                linear-gradient(121.11deg, #151515 0.54%, #000000 100%);
+            backdrop-filter: blur(12.5px);
+            background-position: center;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+
+            .image-cards-container {
+                width: 100%;
+                isolation: isolate;
+                position: relative;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+
+                .image-cards {
+                    position: absolute;
+                    margin-inline: auto;
+
+                    @for $i from 0 through 3 {
+                        &:nth-of-type(#{$i + 1}) {
+                            z-index: #{$i * -1};
+                            transform: translate(
+                                    calc(rem(45) + (#{rem(-30)} * #{$i}))
+                                )
+                                translateY(calc(#{rem(25)} * #{$i}));
+
+                            @if $i != 0 {
+                                .image-container {
+                                    filter: blur(2px);
+                                    background-color: rgba(27, 27, 27, 0.2);
+                                }
+                            }
+                        }
+                    }
+
+                    .image-container {
+                        display: block;
+                        aspect-ratio: 27/25;
+                        width: rem(300);
+                        border-radius: 20px;
+                        overflow: hidden;
+                        border: 1px solid hsl(0, 0%, 50%, 0.2);
+                        background-position: center;
+                        background-size: cover;
+                        background-repeat: no-repeat;
+
+                        &.bg {
+                            background-image: url("../public/assets/sci-girl.png");
+                        }
+
+                        &.last-container {
+                            border: 1px solid hsl(0, 0%, 50%, 0.05);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

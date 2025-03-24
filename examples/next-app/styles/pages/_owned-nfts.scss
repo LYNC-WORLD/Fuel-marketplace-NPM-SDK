@@ -1,0 +1,180 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.owned-nfts {
+  // height: 100vh;
+  padding-top: rem(50);
+  display: grid;
+  grid-template-columns: 1fr;
+  // overflow-y: hidden;
+
+  .container {
+    // height: calc(100vh - 5rem);
+    // padding-inline-start: rem(38);
+    padding-inline-start: 4.5rem;
+    padding-inline-end: 4.5rem;
+    padding-block-start: 4rem;
+    padding-block-end: 0;
+    gap: 0;
+
+    @media #{$max-lgNew} {
+      padding-inline-start: 3rem;
+      padding-inline-end: 3rem;
+      padding-block-start: 3rem;
+      padding-block-end: 0;
+    }
+
+    @media #{$max-md} {
+      padding-inline-start: 2.5rem;
+      padding-inline-end: 2.5rem;
+      padding-block-start: 2rem;
+      padding-block-end: 0;
+    }
+
+    @media #{$max-xs} {
+      padding-inline-start: 1.5rem;
+      padding-inline-end: 1.5rem;
+      padding-block-start: 1.5rem;
+      padding-block-end: 0;
+    }
+
+    .update-message {
+      gap: rem(5);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.05em;
+      color: hsl(var(--color-white) / 0.8);
+
+      svg {
+        width: var(--fs-sm);
+      }
+    }
+
+    .sorting-options-container {
+      background-color: transparent;
+
+      &.gradient-border {
+        &::before,
+        &::after {
+          border-radius: 2px;
+        }
+
+        &::before {
+          background: var(--blur-bg);
+          box-shadow: var(--shadow-blur);
+          backdrop-filter: filter(--blur-filter);
+        }
+      }
+
+      .sorting-options {
+        padding-inline: rem(20);
+        padding-block: rem(7.5);
+        min-width: rem(150);
+        font-size: var(--fs-sm);
+
+        option {
+          background-color: hsl(var(--color-bg-primary));
+        }
+      }
+    }
+
+    .logic-btns-container {
+      gap: rem(10);
+      margin-block: rem(20);
+
+      .logic-btns {
+        flex: 1;
+        padding-block: rem(8);
+        font-size: rem(14.5);
+        letter-spacing: 0.05em;
+        background-color: hsl(var(--color-bg-tertiary));
+        font-weight: var(--fw-light);
+        transition: background-color 100ms linear;
+
+        &:hover {
+          background-color: hsl(var(--color-black));
+          transition: background-color 100ms linear;
+        }
+
+        &.active {
+          font-weight: var(--fw-regular);
+          background-color: hsl(var(--color-black));
+        }
+      }
+    }
+
+    .display-grid-container {
+      flex: 1;
+      overflow-y: scroll;
+      -ms-overflow-style: none;
+      scrollbar-width: 0;
+      //   margin-block-start: rem(40);
+      margin-block-start: rem(20);
+      margin-block-end: rem(20);
+
+      &.no-margin-grid {
+        margin-block-start: rem(20);
+      }
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+}
+
+.form-container {
+  flex: 1;
+  margin-block-start: rem(20);
+  margin-block-end: rem(50);
+  width: 100%;
+  max-width: rem(580);
+  border: 1px solid hsl(var(--color-fuel-green) / 0.5);
+  border-radius: 15px;
+
+  .form-group {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    border-bottom: 1px solid hsl(var(--color-fuel-green) / 0.5);
+    gap: 0.5rem;
+
+    .form-label {
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+      color: hsl(var(--color-fuel-green));
+      letter-spacing: 0.05em;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      background-color: hsl(var(--color-black));
+      padding: 0.25rem 0;
+
+      &::placeholder {
+        color: hsl(var(--color-white) / 0.625);
+        font-weight: var(--fw-light);
+      }
+    }
+
+    .form-input-description {
+      font-size: rem(12.5);
+      color: hsl(var(--color-white) / 0.5);
+      letter-spacing: 0.05em;
+      font-weight: var(--fw-extralight);
+      margin-top: 0.625rem;
+
+      .description-title {
+        margin-bottom: 0.35rem;
+        font-weight: var(--fw-regular);
+      }
+    }
+  }
+
+  .submit-btn {
+    margin: 1.25rem 1.5rem;
+    border-radius: 5px;
+    letter-spacing: 0;
+  }
+}

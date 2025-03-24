@@ -1,0 +1,92 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.collection {
+  padding-block-start: rem(81);
+  padding-block-end: var(--padding-app-block);
+
+  .banner-container {
+    height: rem(250);
+
+    img {
+      object-fit: cover;
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  .collection-profile-container {
+    .collection-profile-img {
+      width: rem(150);
+      margin-block-start: rem(-75);
+      border: 1px solid hsl(var(--color-black) / 0.8);
+      background-color: hsl(var(--skeleton-elements) / 0.75);
+
+      img {
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        object-position: top;
+        object-position: top;
+      }
+    }
+
+    .collection-name {
+      font-size: var(--fs-4xl);
+    }
+
+    .collection-address-container {
+      color: hsl(var(--color-white) / 0.8);
+      font-size: rem(11);
+      letter-spacing: 0.09em;
+      margin-block: rem(10);
+    }
+
+    .collection-description {
+      // width: 70ch;
+      letter-spacing: 0.07em;
+      font-size: rem(12);
+      line-height: 1.2;
+    }
+  }
+
+  .collection-option-list-container {
+    // padding-inline: calc(var(--padding-app-inline) - rem(12));
+    padding-inline: var(--padding-app-inline);
+    margin-block: rem(40);
+    // position: sticky;
+    // top: rem(77);
+    // z-index: 99;
+    background-color: hsl(var(--color-bg-primary));
+
+    .collection-options-list {
+      border-top: 1px solid hsl(var(--color-fuel-green) / 0.35);
+      //   border-bottom: 1px solid hsl(var(--color-white) / 0.3);
+      // padding: rem(16) rem(12);
+      gap: rem(40);
+
+      .option-list-items {
+        font-size: var(--fs-xs);
+        color: hsl(var(--color-white) / 0.4);
+        letter-spacing: 0.075em;
+        cursor: pointer;
+        transition: color 100ms linear;
+
+        &:hover {
+          color: hsl(var(--color-white));
+          transition: color 150ms linear;
+        }
+
+        &.active {
+          color: hsl(var(--color-white));
+        }
+      }
+    }
+  }
+
+  .display-grid-container {
+    .display-grid {
+      gap: rem(15);
+    }
+  }
+}

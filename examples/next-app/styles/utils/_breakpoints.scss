@@ -1,0 +1,33 @@
+@use "./functions" as *;
+
+// -- Min Media Queries --
+
+$min-mini: "screen and (min-width: #{em(350)})";
+$min-xs: "screen and (min-width: #{em(480)})";
+$min-sm: "screen and (min-width: #{em(620)})";
+$min-md: "screen and (min-width: #{em(768)})";
+$min-lg: "screen and (min-width: #{em(992)})";
+$min-xl: "screen and (min-width: #{em(1120)})";
+$min-2xl: "screen and (min-width: #{em(1280)})";
+$min-3xl: "screen and (min-width: #{em(1440)})";
+$min-4xl: "screen and (min-width: #{em(1600)})";
+$min-5xl: "screen and (min-width: #{em(1920)})";
+$min-6xl: "screen and (min-width: #{em(2250)})";
+$min-7xl: "screen and (min-width: #{em(2500)})";
+
+// -- Max Media Queries --
+
+$max-mini: "screen and (max-width: #{em(349.98)})";
+$max-miniNew: "screen and (max-width: #{em(375.98)})";
+$max-xs: "screen and (max-width: #{em(479.98)})";
+$max-sm: "screen and (max-width: #{em(619.98)})";
+$max-md: "screen and (max-width: #{em(768.98)})";
+$max-lg: "screen and (max-width: #{em(991.98)})";
+$max-lgNew: "screen and (max-width: #{em(1024)})";
+$max-xl: "screen and (max-width: #{em(1119.98)})";
+$max-2xl: "screen and (max-width: #{em(1279.98)})";
+$max-3xl: "screen and (max-width: #{em(1439.98)})";
+$max-4xl: "screen and (max-width: #{em(1599.98)})";
+$max-5xl: "screen and (max-width: #{em(1919.98)})";
+$max-6xl: "screen and (max-width: #{em(2249.98)})";
+$max-7xl: "screen and (max-width: #{em(2499.98)})";

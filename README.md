@@ -7,7 +7,7 @@ Introducing marketplace NPM SDK on Fuel blockchain. Powered by LYNC, it allows a
 - [View documentation](https://docs.lync.world/fuel/fuel-marketplace-npm-sdk)
 - [Package link on npmjs](https://www.npmjs.com/package/@lyncworld/fuel-marketplace)
 - [View code on GitHub](https://github.com/LYNC-WORLD/fuel-marketplace-NPM-SDK)
-- [View example application code on GitHub](https://github.com/LYNC-WORLD/Fuel-Marketplace-Frontend)
+- [View example application codes on GitHub](./examples/)
 
 ## Prerequisites
 
@@ -50,9 +50,9 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
    const { fetching, data, error } = useAllNftsInCollection({
      network: Networks.Testnet,
      // Select from "NFT" or "SEMI_FT" according to actual token standard
-     nftStandard: 'SEMI_FT',
+     nftStandard: "SEMI_FT",
      // Replace this demo contract address with actual contract address
-     contractAddress: '0x...',
+     contractAddress: "0x...",
    });
    ```
 
@@ -68,7 +68,7 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
      contractAddress: `0x${string}`;
      tokenId: `0x${string}`;
      assetId: `0x${string}`;
-     tokenStandard: 'NFT' | 'SEMI_FT';
+     tokenStandard: "NFT" | "SEMI_FT";
      contractName: string;
      contractSymbol: string;
    }
@@ -92,7 +92,7 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
    ```typescript
    interface MarketplaceCollections {
      contractAddress: `0x${string}`;
-     tokenStandard: 'NFT' | 'SEMI_FT';
+     tokenStandard: "NFT" | "SEMI_FT";
      collectionName: string;
      collectionSymbol: string;
      floorPrice: string;
@@ -121,7 +121,7 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
      listingId: number;
      isActive: boolean;
      nftAddress: `0x${string}`;
-     tokenStandard: 'NFT' | 'SEMI_FT';
+     tokenStandard: "NFT" | "SEMI_FT";
      tokenId: `0x${string}`;
      assetId: `0x${string}`;
      tokenQuantity: number;
@@ -141,11 +141,11 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
    const { fetching, data, error } = useNft({
      network: Networks.Testnet,
      // Select from "NFT" or "SEMI_FT" according to actual token standard
-     nftStandard: 'SEMI_FT',
+     nftStandard: "SEMI_FT",
      // Replace this demo contract address with actual contract address of the token
-     contractAddress: '0x...',
+     contractAddress: "0x...",
      // Replace this demo token id with actual token id (or sub id) of the token
-     tokenId: '0x...',
+     tokenId: "0x...",
      // You can pass the limit to get the top N listing or remove it to get all the listing of the token
      limit: 10,
    });
@@ -161,13 +161,13 @@ The SDK provides a set of hooks that you can use to get the marketplace data. He
    }
 
    interface OmittedMarketplaceListings
-     extends Omit<MarketplaceListings, 'tokenName' | 'tokenImage' | 'tokenAssetMedia'> {}
+     extends Omit<MarketplaceListings, "tokenName" | "tokenImage" | "tokenAssetMedia"> {}
 
    interface MarketplaceListings {
      listingId: number;
      isActive: boolean;
      nftAddress: `0x${string}`;
-     tokenStandard: 'NFT' | 'SEMI_FT';
+     tokenStandard: "NFT" | "SEMI_FT";
      tokenId: `0x${string}`;
      assetId: `0x${string}`;
      tokenQuantity: number;
@@ -193,7 +193,7 @@ The SDK provides a set of services that you can use to list and buy tokens or mo
 For performing list token, buy token, modify listing or cancel listing services on marketplace using the SDK, you will need to create an instance of `MarketplaceClient` class provided by the SDK. Here is an example of creating a new instance of `MarketplaceClient` class using the SDK::
 
 ```typescript
-import { MarketplaceClient, Networks } from '@lyncworld/fuel-marketplace';
+import { MarketplaceClient, Networks } from "@lyncworld/fuel-marketplace";
 
 const marketplaceClient = new MarketplaceClient(
   Networks.Testnet,
@@ -211,21 +211,21 @@ After creating an instance of `MarketplaceClient` class, you can utilize various
    const response = await marketplaceClient
      .useListTokenService()
      .setProperties(
-       '0x...', // asset id of the token to be listed
-       '0x...', // contract address of the token to be listed
-       '0x...', // token id (or sub id) of the token to be listed
+       "0x...", // asset id of the token to be listed
+       "0x...", // contract address of the token to be listed
+       "0x...", // token id (or sub id) of the token to be listed
        0.0002, // price per item of the token to be listed
        4, // quantity of the token to be listed (always 1 for NFT)
-       'SEMI_FT' // token standard of the token to be listed (choose from NFT or SEMI_FT)
+       "SEMI_FT" // token standard of the token to be listed (choose from NFT or SEMI_FT)
      )
      .execute();
 
    if (response.success) {
-     alert('Token listed successfully.');
-     console.log('Transaction data: ', response.data);
+     alert("Token listed successfully.");
+     console.log("Transaction data: ", response.data);
    } else {
-     alert('Error listing token.');
-     console.error('Error listing token: ', { error: response.error });
+     alert("Error listing token.");
+     console.error("Error listing token: ", { error: response.error });
    }
    ```
 
@@ -237,18 +237,18 @@ After creating an instance of `MarketplaceClient` class, you can utilize various
    const response = await marketplaceClient
      .useBuyTokenService()
      .setProperties(
-       '0x...', // listing id of the token to be bought
+       "0x...", // listing id of the token to be bought
        2, // quantity of the token to be bought (always 1 for NFT)
        0.0002 // price per item of the token to be bought
      )
      .execute();
 
    if (response.success) {
-     alert('Token bought successfully.');
-     console.log('Transaction data: ', response.data);
+     alert("Token bought successfully.");
+     console.log("Transaction data: ", response.data);
    } else {
-     alert('Error buying token.');
-     console.error('Error buying token: ', { error: response.error });
+     alert("Error buying token.");
+     console.error("Error buying token: ", { error: response.error });
    }
    ```
 
@@ -284,16 +284,16 @@ After creating an instance of `MarketplaceClient` class, you can utilize various
    const response = await marketplaceClient
      .useCancelListingService()
      .setProperties(
-       '0x...' // listing id of the token to be cancelled
+       "0x..." // listing id of the token to be cancelled
      )
      .execute();
 
    if (response.success) {
-     alert('Listing cancelled successfully.');
-     console.log('Transaction data: ', response.data);
+     alert("Listing cancelled successfully.");
+     console.log("Transaction data: ", response.data);
    } else {
-     alert('Error canceling listing.');
-     console.error('Error canceling listing: ', { error: response.error });
+     alert("Error canceling listing.");
+     console.error("Error canceling listing: ", { error: response.error });
    }
    ```
 
@@ -308,7 +308,7 @@ The SDK also provides some useful functions that you can use to implement search
    ```typescript
    const response = searchMarketplace(
      Networks.Testnet,
-     '0x...' // contract address, token id, asset id, or seller address to search
+     "0x..." // contract address, token id, asset id, or seller address to search
    );
    ```
 
@@ -320,7 +320,7 @@ The SDK also provides some useful functions that you can use to implement search
      listingId: number;
      isActive: boolean;
      nftAddress: `0x${string}`;
-     tokenStandard: 'NFT' | 'SEMI_FT';
+     tokenStandard: "NFT" | "SEMI_FT";
      tokenId: `0x${string}`;
      assetId: `0x${string}`;
      tokenQuantity: number;
@@ -353,7 +353,7 @@ The SDK also provides some useful functions that you can use to implement search
      data: {
        contractAddress: `0x${string}`;
        subId: `0x${string}`;
-       nftStandard: 'NFT' | 'SEMI_FT';
+       nftStandard: "NFT" | "SEMI_FT";
      }
    }
    ```
@@ -373,12 +373,12 @@ The various hooks, services and functions provided by the SDK can return differe
 
 ```typescript
 enum MarketplaceErrorCodes {
-  InsufficientBalance = 'InsufficientBalance',
-  InvalidArgumentsError = 'InvalidArgumentsError',
-  InvalidNetworkArgument = 'InvalidNetworkArgument',
-  NetworkRequestError = 'NetworkRequestError',
-  PropertyUndefinedError = 'PropertyUndefinedError',
-  ServerError = 'ServerError',
+  InsufficientBalance = "InsufficientBalance",
+  InvalidArgumentsError = "InvalidArgumentsError",
+  InvalidNetworkArgument = "InvalidNetworkArgument",
+  NetworkRequestError = "NetworkRequestError",
+  PropertyUndefinedError = "PropertyUndefinedError",
+  ServerError = "ServerError",
 }
 ```
 
@@ -395,21 +395,21 @@ enum MarketplaceErrorCodes {
 
 ```typescript
 enum AllowedProviders {
-  FuelProvider = 'FuelProvider',
-  WalletProvider = 'WalletProvider',
+  FuelProvider = "FuelProvider",
+  WalletProvider = "WalletProvider",
 }
 
 enum Networks {
-  Testnet = 'testnet',
+  Testnet = "testnet",
 }
 
 enum MarketplaceErrorCodes {
-  InsufficientBalance = 'InsufficientBalance',
-  InvalidArgumentsError = 'InvalidArgumentsError',
-  InvalidNetworkArgument = 'InvalidNetworkArgument',
-  NetworkRequestError = 'NetworkRequestError',
-  PropertyUndefinedError = 'PropertyUndefinedError',
-  ServerError = 'ServerError',
+  InsufficientBalance = "InsufficientBalance",
+  InvalidArgumentsError = "InvalidArgumentsError",
+  InvalidNetworkArgument = "InvalidNetworkArgument",
+  NetworkRequestError = "NetworkRequestError",
+  PropertyUndefinedError = "PropertyUndefinedError",
+  ServerError = "ServerError",
 }
 ```
 
@@ -420,7 +420,7 @@ interface MarketplaceListings {
   listingId: number;
   isActive: boolean;
   nftAddress: `0x${string}`;
-  tokenStandard: 'NFT' | 'SEMI_FT';
+  tokenStandard: "NFT" | "SEMI_FT";
   tokenId: `0x${string}`;
   assetId: `0x${string}`;
   tokenQuantity: number;
@@ -433,7 +433,7 @@ interface MarketplaceListings {
 
 interface MarketplaceCollections {
   contractAddress: `0x${string}`;
-  tokenStandard: 'NFT' | 'SEMI_FT';
+  tokenStandard: "NFT" | "SEMI_FT";
   collectionName: string;
   collectionSymbol: string;
   floorPrice: string;
@@ -447,7 +447,7 @@ interface NftDetails {
 }
 
 interface OmittedMarketplaceListings
-  extends Omit<MarketplaceListings, 'tokenName' | 'tokenImage' | 'tokenAssetMedia'> {}
+  extends Omit<MarketplaceListings, "tokenName" | "tokenImage" | "tokenAssetMedia"> {}
 
 interface NftMetadata {
   tokenName: string;
@@ -464,19 +464,15 @@ interface TokensInCollection {
   contractAddress: `0x${string}`;
   tokenId: `0x${string}`;
   assetId: `0x${string}`;
-  tokenStandard: 'NFT' | 'SEMI_FT';
+  tokenStandard: "NFT" | "SEMI_FT";
   contractName: string;
   contractSymbol: string;
 }
 
 class MarketplaceError<TErrorData = unknown> extends Error {
-  constructor(
-    message: string,
-    public code: MarketplaceErrorCodes,
-    public errorData?: TErrorData
-  ) {
+  constructor(message: string, public code: MarketplaceErrorCodes, public errorData?: TErrorData) {
     super(message);
-    this.name = 'MarketplaceError';
+    this.name = "MarketplaceError";
   }
 }
 ```

@@ -1,0 +1,94 @@
+@use "../utils/functions" as *;
+@use "../utils//breakpoints" as *;
+
+.nft-card.skeleton {
+    --elements-border-radius: 2px;
+
+    .nft-img {
+        border-bottom: 1px solid hsl(var(--color-border-line) / 0.5) !important;
+
+        .heart-icon {
+            background-color: hsl(var(--skeleton-elements) / 0.35);
+        }
+
+        .nft-type {
+            background-color: hsl(var(--skeleton-elements) / 0.35);
+            height: calc((var(--fs-sm)) * var(--line-height-base));
+            width: 9ch;
+        }
+    }
+
+    .nft-details {
+        .name-price-data {
+            .name {
+                background-color: hsl(var(--skeleton-elements) / 0.35);
+                height: calc(var(--fs-base) * var(--line-height-base));
+                border-radius: var(--elements-border-radius);
+            }
+
+            .price {
+                gap: rem(3) !important;
+
+                .price-label {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    height: calc(rem(6) * var(--line-height-base));
+                    width: 5ch;
+                    border-radius: calc(var(--elements-border-radius) / 2);
+                }
+
+                .price-amount {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    height: calc(var(--fs-base) * var(--line-height-base));
+                    width: 7ch;
+                    border-radius: var(--elements-border-radius);
+                }
+            }
+        }
+
+        .creator-details {
+            .creator-avatar {
+                background-color: hsl(var(--skeleton-elements) / 0.35);
+            }
+
+            .creator-name {
+                gap: rem(3) !important;
+
+                .label {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    height: calc(rem(6) * var(--line-height-base));
+                    width: 10ch;
+                    border-radius: calc(var(--elements-border-radius) / 2);
+                }
+
+                .name {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    height: calc(var(--fs-xs) * var(--line-height-base));
+                    width: 12ch;
+                    border-radius: var(--elements-border-radius);
+                }
+            }
+
+            .quantity {
+                gap: rem(3) !important;
+
+                .label {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    height: calc(rem(6) * var(--line-height-base));
+                    width: 10ch;
+                    border-radius: calc(var(--elements-border-radius) / 2);
+                }
+
+                .name {
+                    background-color: hsl(var(--skeleton-elements) / 0.35);
+                    height: calc(var(--fs-xs) * var(--line-height-base));
+                    width: 5.75ch;
+                    border-radius: var(--elements-border-radius);
+                }
+            }
+        }
+    }
+
+    * {
+        animation: skeleton-loading 1.25s linear infinite alternate;
+    }
+}

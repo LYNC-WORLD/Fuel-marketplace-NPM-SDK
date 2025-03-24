@@ -1,0 +1,99 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.no-search-results {
+  background: hsl(var(--color-bg-tertiary));
+  padding: rem(8);
+  gap: rem(8);
+
+  .search-icons-container {
+    gap: rem(0);
+    font-size: rem(14);
+    color: hsl(var(--color-white) / 0.6);
+
+    .search-query {
+      width: 100%;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+      font-weight: var(--fw-extralight);
+      margin-left: rem(3);
+    }
+  }
+
+  .no-search-result-msg {
+    font-weight: var(--fw-light);
+  }
+}
+
+.search-data {
+  background: hsl(var(--color-bg-secondary));
+  padding: rem(8);
+  gap: rem(8);
+  transition: background 100ms ease;
+
+  &.skeleton {
+    border: 0;
+  }
+
+  &:hover {
+    background: hsl(var(--color-bg-tertiary));
+    transition: background 300ms ease;
+  }
+
+  .data-avatar {
+    width: rem(50);
+    height: rem(50);
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: hsl(var(--skeleton-elements) / 0.25);
+
+    &.skeleton {
+      border: 0;
+      animation: skeleton-loading 1.25s linear infinite alternate;
+    }
+
+    img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      top: 0;
+      object-position: top;
+      transition: transform 0.4s ease 0s;
+    }
+  }
+
+  .data-name {
+    flex: 1;
+    letter-spacing: 0.025em;
+
+    .name {
+      font-size: var(--fs-base);
+      width: 60%;
+
+      &.skeleton {
+        height: rem(22);
+        border: 0;
+        background-color: hsl(var(--skeleton-elements) / 0.25);
+        border-radius: 2px;
+        animation: skeleton-loading 1.25s linear infinite alternate;
+      }
+    }
+
+    .address {
+      font-size: var(--fs-sm);
+      color: hsl(var(--color-white) / 0.6);
+      letter-spacing: 0.035em;
+      width: 80%;
+
+      &.skeleton {
+        height: rem(19.5);
+        border: 0;
+        background-color: hsl(var(--skeleton-elements) / 0.25);
+        border-radius: 2px;
+        animation: skeleton-loading 1.25s linear infinite alternate;
+      }
+    }
+  }
+}

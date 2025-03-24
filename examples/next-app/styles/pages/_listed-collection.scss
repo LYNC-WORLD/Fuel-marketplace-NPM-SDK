@@ -1,0 +1,183 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.listed-collection {
+  height: 110vh;
+  padding-top: rem(80);
+  display: grid;
+  grid-template-columns: 1fr;
+
+  .container {
+    height: calc(100vh - 2rem);
+    overflow-x: auto;
+    padding-inline-start: 4.5rem;
+    padding-inline-end: 4.5rem;
+    padding-block-start: 4rem;
+    padding-block-end: 0;
+    gap: 0;
+
+    @media #{$max-lgNew} {
+      padding-inline-start: 3rem;
+      padding-inline-end: 3rem;
+      padding-block-start: 3rem;
+      padding-block-end: 0;
+    }
+
+    @media #{$max-md} {
+      padding-inline-start: 2.5rem;
+      padding-inline-end: 2.5rem;
+      padding-block-start: 2rem;
+      padding-block-end: 0;
+    }
+
+    @media #{$max-xs} {
+      padding-inline-start: 1.5rem;
+      padding-inline-end: 1.5rem;
+      padding-block-start: 1.5rem;
+      padding-block-end: 0;
+    }
+
+    .update-message {
+      gap: rem(5);
+      font-size: var(--fs-xs);
+      letter-spacing: 0.05em;
+      color: hsl(var(--color-white) / 0.8);
+
+      svg {
+        width: var(--fs-sm);
+      }
+    }
+
+    .sorting-options-container {
+      background-color: transparent;
+
+      &.gradient-border {
+        &::before,
+        &::after {
+          border-radius: 2px;
+        }
+
+        &::before {
+          background: var(--blur-bg);
+          box-shadow: var(--shadow-blur);
+          backdrop-filter: filter(--blur-filter);
+        }
+      }
+
+      .sorting-options {
+        padding-inline: rem(20);
+        padding-block: rem(7.5);
+        min-width: rem(150);
+        font-size: var(--fs-sm);
+
+        option {
+          background-color: hsl(var(--color-bg-primary));
+        }
+      }
+    }
+
+    .collection-table-container {
+      scrollbar-width: 0;
+      overflow-x: auto;
+      margin-top: rem(20);
+      /* overflow-y: hidden; */
+      -ms-overflow-style: none;
+      width: 100%;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .collection-table {
+      display: block;
+      // flex: 1;
+      min-width: 700px;
+      // z-index: -1;
+      table-layout: fixed;
+      border-collapse: collapse;
+      overflow-x: auto;
+      overflow-y: auto;
+      -ms-overflow-style: none;
+      scrollbar-width: 0;
+      margin-block-start: 40px;
+      margin-block-end: 20px;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      .table-heading {
+        display: block;
+        padding-block: 10px;
+        position: sticky;
+        top: 0;
+        background-color: hsl(var(--color-bg-primary));
+
+        th {
+          min-width: 150px;
+        }
+
+        .table-row {
+          .table-data {
+            font-size: var(--fs-xs);
+            color: hsl(var(--color-white) / 0.4);
+            text-align: right;
+          }
+        }
+      }
+
+      .table-body {
+        display: block;
+        td {
+          min-width: 150px;
+        }
+        .table-row {
+          padding-block: 10px;
+          border-bottom: 1px solid transparent;
+          border-top: 1px solid transparent;
+          transition: border 150ms ease;
+
+          &:hover {
+            border-top: 1px solid hsl(var(--color-fuel-green));
+            border-bottom: 1px solid hsl(var(--color-fuel-green));
+            transition: border 450ms ease;
+          }
+
+          .table-data {
+            .collection-image {
+              width: rem(45);
+              border-radius: 4px;
+              overflow: hidden;
+
+              img {
+                object-fit: cover;
+                aspect-ratio: 1;
+                position: absolute;
+                top: 0;
+                object-position: top;
+              }
+            }
+
+            font-size: var(--fs-sm);
+          }
+        }
+      }
+
+      .table-row {
+        display: grid;
+        grid-template-columns: 4fr 1fr 1fr 1fr 1fr;
+        align-items: center;
+        gap: rem(10);
+
+        .table-data {
+          text-align: right;
+          letter-spacing: 0.05em;
+
+          &:first-of-type {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.sidebar {
+    grid-column: span 1;
+    background-color: hsl(var(--color-black) / 0.5);
+    padding-inline-start: var(--padding-app-inline);
+    padding-inline-end: rem(32);
+    padding-block-start: rem(40);
+
+    .sidebar-heading {
+        font-size: calc((var(--fs-lg) + var(--fs-xl)) / 2);
+        letter-spacing: 0.03em;
+    }
+
+    .sidebar-options-list {
+        gap: rem(7);
+        margin-top: rem(100);
+
+        .sidebar-option-items {
+            font-size: var(--fs-sm);
+            padding-inline-end: rem(6);
+
+            letter-spacing: 0.05em;
+            cursor: pointer;
+
+            svg {
+                width: rem(11);
+            }
+        }
+    }
+}

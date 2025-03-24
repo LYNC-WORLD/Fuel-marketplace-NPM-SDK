@@ -1,0 +1,182 @@
+@use "../utils/breakpoints" as *;
+@use "../utils/functions" as *;
+
+.display-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: rem(10);
+
+  @media #{$max-lg} {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media #{$max-md} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media #{$max-xs} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media #{$max-xs} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media #{$max-miniNew} {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .no-events {
+    grid-column: 1/-1;
+  }
+
+  .grid-card-container {
+    &.gradient-border {
+      &::before,
+      &::after {
+        border-radius: 0;
+      }
+    }
+
+    border: 1px solid transparent;
+    transition: border 100ms ease;
+
+    &:hover {
+      transition: border 300ms ease;
+      border: 1px solid hsl(var(--color-fuel-green));
+    }
+
+    .nft-img {
+      overflow: hidden;
+      border-bottom: 1px solid hsl(var(--color-border-line));
+      max-width: 100%;
+
+      img,
+      video {
+        width: 100%;
+        object-fit: cover;
+        object-position: top;
+        aspect-ratio: 1;
+        transition: transform 0.4s ease 0s;
+      }
+
+      .nft-type {
+        top: rem(8);
+        left: rem(8);
+        font-size: rem(11);
+        letter-spacing: 0.1em;
+        background-color: hsl(var(--color-bg-tertiary) / 0.6);
+        padding-inline: rem(6);
+        padding-block: rem(1);
+      }
+
+      &:hover {
+        img {
+          transform: scale(1.1);
+          transition: transform 0.4s ease 0s;
+        }
+      }
+    }
+
+    .details {
+      padding: rem(8) rem(8);
+      gap: rem(10);
+
+      .name-price-data {
+        gap: rem(0);
+
+        .price-amount {
+          font-size: rem(15);
+          letter-spacing: 0.085em;
+        }
+
+        .data-label-btn {
+          gap: rem(5);
+
+          .data-label {
+            font-size: 0.625rem;
+            letter-spacing: 0.1em;
+            color: hsl(var(--color-white) / 0.6);
+          }
+        }
+
+        .name {
+          flex: 1;
+          max-width: 12ch;
+          text-transform: capitalize;
+          letter-spacing: 0.085em;
+          font-size: rem(18);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-weight: var(--fw-medium);
+        }
+
+        &:not(:has(.price)) {
+          .name {
+            max-width: 15ch;
+          }
+        }
+
+        .price {
+          gap: 0;
+
+          .price-label {
+            font-size: rem(7);
+            letter-spacing: 0.1em;
+            color: hsl(var(--color-white) / 0.6);
+          }
+
+          .price-amount {
+            font-size: rem(8);
+            letter-spacing: 0.2em;
+          }
+        }
+      }
+
+      .creator-details {
+        gap: rem(5);
+        &.rentedCard {
+          display: flex;
+          justify-content: space-between;
+        }
+        .tokenquantity {
+          font-size: rem(15);
+        }
+
+        .creator-avatar {
+          width: rem(25);
+          border: 1px solid hsl(var(--color-slider-btn-bg));
+        }
+
+        .creator-name {
+          gap: 0;
+
+          .label {
+            color: hsl(var(--color-white) / 0.8);
+            font-size: rem(7);
+            letter-spacing: 0.1em;
+          }
+
+          .name {
+            font-size: rem(10);
+            letter-spacing: 0.05em;
+          }
+        }
+
+        .quantity {
+          gap: 0;
+
+          .label {
+            color: hsl(var(--color-white) / 0.8);
+            font-size: rem(7);
+            letter-spacing: 0.1em;
+          }
+
+          .name {
+            font-size: rem(11);
+            letter-spacing: 0.05em;
+          }
+        }
+      }
+    }
+  }
+}
