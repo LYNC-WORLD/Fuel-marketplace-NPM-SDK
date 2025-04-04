@@ -1313,10 +1313,10 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.2.0"
 
-"@lyncworld/fuel-marketplace@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@lyncworld/fuel-marketplace/-/fuel-marketplace-1.0.2.tgz#cb80f396ea89717be7feadce7e8b16d27140fe18"
-  integrity sha512-FmHEmzoLFRSbEVNgPBfP5paizwhJbYS8p9iYrZUDkV4ZTQDKPp4S36zt/o8Bhp7+MUTT0Xh6KHIOJk/7SOM1VA==
+"@lyncworld/fuel-marketplace@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@lyncworld/fuel-marketplace/-/fuel-marketplace-1.1.3.tgz#4b62f9f08d33b01f34f3e39bd2eb606e4823590f"
+  integrity sha512-SYEo23bzIUErR6t9VPGfSL6wK6QS3mp0KXFvrwch0lNlOpLwIYYoG5MZfA3dAzGJjUZ5oCGTVUQxS//M5TDhRg==
   dependencies:
     axios "^1.7.9"
     fuels "^0.97.2"

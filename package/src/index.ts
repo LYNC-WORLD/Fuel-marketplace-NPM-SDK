@@ -12,6 +12,7 @@ import {
 import { MarketplaceClient } from '@/services/marketplace';
 import { searchMarketplace } from '@/services/orders';
 import { checkNftOwnership } from '@/utils';
+import { getAllNftsInCollection, getCollections, getListings, getNftDetails } from '@/ssr';
 
 export {
   /* -- Hooks -- */
@@ -19,6 +20,12 @@ export {
   useCollections,
   useListings,
   useNft,
+
+  /* -- SSR Functions -- */
+  getAllNftsInCollection,
+  getCollections,
+  getListings,
+  getNftDetails,
 
   /* -- Enums -- */
   AllowedProviders,
